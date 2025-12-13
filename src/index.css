@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import "tailwindcss";
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  /* --color-primary: #FF8A00;
+  --color-secondary: #393E46; */
+
+
+    --color-primary: #2563EB;        /* Buttons / Links */
+  --color-primary-focus: #1D4ED8;  /* Button Hover */
+
+  --color-secondary: #111827;      /* Headings */
+  --color-secondary-focus: #0F172A;
+
+  --color-accent: #38BDF8;         /* Highlights */
+  --color-accent-focus: #0EA5E9;
+
+  --color-neutral: #1E293B;        /* Body Text */
+
+  --color-base-100: #FFFFFF;       /* Page BG */
+  --color-base-200: #F8FAFC;       /* Card BG */
+
+  --color-info: #0EA5E9;           /* Info */
+  --color-success: #22C55E;        /* Success */
+  --color-warning: #EAB308;        /* Warning */
+  --color-error: #EF4444;          /* Error */
+
+}
+
+body{
+   font-family: "Inter", sans-serif;
+}
