@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { CheckCircle } from "lucide-react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "../../loading/Loading";
 
 const PackagesSection = () => {
-  const [packages, setPackages] = useState([]);
+  const axiosSecure = useAxiosSecure();
 
-  const axiosSecure = useAxiosSecure()
+  const { data: packages = [], isLoading } = useQuery({
+    queryKey: ["packages"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/packages");
+      return res.data;
+    },
+  });
 
-  useEffect(() => {
-    // fetch("http://localhost:3000/packages")
-
-    //   .then(res => res.json())
-    //   .then(data => setPackages(data));
-
-    axiosSecure.get('/packages')
-    .then(res =>{
-        setPackages(res.data)
-    })
-
-  }, [axiosSecure]);
+  if (isLoading) {
+    return <Loading></Loading>
+  }
 
   return (
     <section className="py-20 bg-base-200">
@@ -34,72 +33,55 @@ const PackagesSection = () => {
           </p>
         </div>
 
-        {/* Packages Grid */}
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {packages.map((pkg) => {
-            const isPopular = pkg.name === "Standard";
+          {packages.map((pkg) => (
+            <div
+              key={pkg._id}
+              className="
+                card bg-base-100 border border-base-200 p-8
+                transition-all duration-300
+                hover:border-primary
+                hover:shadow-lg
+                hover:-translate-y-1
+              "
+            >
+              <h3 className="text-xl font-semibold text-secondary mb-2">
+                {pkg.name}
+              </h3>
 
-            return (
-              <div
-                key={pkg._id}
-                className={`card bg-base-100 border ${
-                  isPopular
-                    ? "border-primary shadow-lg"
-                    : "border-base-200"
-                } p-8`}
-              >
-                {/* Package Name */}
-                <h3 className="text-xl font-semibold text-secondary mb-2">
-                  {pkg.name}
-                </h3>
+              <p className="text-sm text-neutral mb-4">
+                Up to {pkg.employeeLimit} employees
+              </p>
 
-                {/* Employee Limit */}
-                <p className="text-sm text-neutral mb-4">
-                  Up to {pkg.employeeLimit} employees
-                </p>
-
-                {/* Price */}
-                <div className="mb-6">
-                  <span className="text-4xl font-bold text-primary">
-                    ${pkg.price}
-                  </span>
-                  <span className="text-neutral text-sm"> / month</span>
-                </div>
-
-                {/* Features */}
-                <ul className="space-y-3 mb-8">
-                  {pkg.features.map((feature, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-3 text-neutral"
-                    >
-                      <CheckCircle
-                        className="w-5 h-5 text-success mt-0.5"
-                        strokeWidth={1.5}
-                      />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA Button */}
-                <button
-                  className={`btn w-full ${
-                    isPopular ? "btn-primary" : "btn-outline"
-                  }`}
-                >
-                  Get Started
-                </button>
-
-                {/* Popular Badge */}
-                {isPopular && (
-                  <div className="mt-4 text-sm text-primary text-center font-medium">
-                    Most Popular
-                  </div>
-                )}
+              <div className="mb-6">
+                <span className="text-4xl font-bold text-primary">
+                  ${pkg.price}
+                </span>
+                <span className="text-neutral text-sm"> / month</span>
               </div>
-            );
-          })}
+
+              <ul className="space-y-3 mb-8">
+                {pkg.features.map((feature, index) => (
+                  <li
+                    key={index}
+                    className="flex items-start gap-3 text-neutral"
+                  >
+                    <CheckCircle
+                      className="w-5 h-5 text-success mt-0.5"
+                      strokeWidth={1.5}
+                    />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA */}
+              <button className="btn btn-outline hover:bg-primary hover:text-white w-full">
+                Get Started
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </section>
