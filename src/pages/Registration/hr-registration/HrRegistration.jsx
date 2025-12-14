@@ -1,31 +1,92 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useAuth from "../../../hooks/useAuth";
+import axios from "axios";
 
 const HrRegistration = () => {
+  const { registerUser, updateUserProfile } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const handleRegister = (data) => {
-    // Prepare the final data structure for backend
-    const registrationData = {
-      ...data,
-      role: "hr",             // auto-assigned
-      packageLimit: 5,        // auto-assigned
-      currentEmployees: 0,    // auto-assigned
-      subscription: "basic",  // auto-assigned
-    };
 
-    console.log("HR registration data:", registrationData);
+
+  const handleRegister = (data) => {
+    console.log("HR----------- registration data:", data);
+
+    const imageFile = data.companyLogo[0];
+    console.log("image file--------hr-----", imageFile);
+
+    registerUser(data.email, data.password)
+      .then((result) => {
+        console.log("user created------------------------", result.user);
+
+        // 1.store the image in FormData
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        // 2. send the photo to store and get the url
+        const image_Api_url = `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_image_host_key
+        }`;
+
+        axios.post(image_Api_url, formData).then((res) => {
+          console.log("-------after image upload--------", res);
+          const photoURL = res.data.data.url;
+
+          const userInfo = {
+            name: data.name,
+            companyName: data.companyName,
+            companyLogo: photoURL,
+            email: data.email,
+            password: data.password,
+            dateOfBirth: data.dateOfBirth,
+            role: "hr",
+            packageLimit: 5,
+            currentEmployees: 0,
+            subscription: "basic",
+          };
+
+          // create user in database
+          axiosSecure
+            .post("/users", userInfo)
+            .then((res) => {
+              if (res.data.insertedId) {
+                console.log("----------user created in database---------", res);
+              }
+            })
+            .catch((error) => {
+              console.log("------------errorrrr", error);
+            });
+
+          // 3.update the profile to firebase
+          const userProfile = {
+            displayName: data.name,
+            photoURL: photoURL,
+          };
+          updateUserProfile(userProfile)
+            .then(() => {
+              console.log("user profle uploaded------------");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center py-14 px-4">
       <div className="grid md:grid-cols-2 bg-base-100 shadow-xl rounded-2xl overflow-hidden max-w-5xl w-full">
-
         {/* Form Section */}
         <div className="p-8 md:p-10 flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-secondary mb-2">
@@ -42,7 +103,6 @@ const HrRegistration = () => {
           </p>
 
           <form onSubmit={handleSubmit(handleRegister)} className="space-y-4">
-
             {/* Full Name */}
             <div>
               <label className="label">Full Name</label>
@@ -62,14 +122,16 @@ const HrRegistration = () => {
               <input
                 type="email"
                 className="input input-bordered w-full"
-                {...register("email", { 
+                {...register("email", {
                   required: true,
-                  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ 
+                  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 })}
                 placeholder="email@company.com"
               />
               {errors.email && (
-                <p className="text-error text-sm mt-1">Valid email is required</p>
+                <p className="text-error text-sm mt-1">
+                  Valid email is required
+                </p>
               )}
             </div>
 
@@ -82,7 +144,9 @@ const HrRegistration = () => {
                 placeholder="AssetVerse Ltd."
               />
               {errors.companyName && (
-                <p className="text-error text-sm mt-1">Company Name is required</p>
+                <p className="text-error text-sm mt-1">
+                  Company Name is required
+                </p>
               )}
             </div>
 
@@ -97,7 +161,9 @@ const HrRegistration = () => {
               />
 
               {errors.companyLogo && (
-                <p className="text-error text-sm mt-1">Company Logo is required</p>
+                <p className="text-error text-sm mt-1">
+                  Company Logo is required
+                </p>
               )}
             </div>
 
@@ -110,7 +176,9 @@ const HrRegistration = () => {
                 {...register("dateOfBirth", { required: true })}
               />
               {errors.dateOfBirth && (
-                <p className="text-error text-sm mt-1">Date of Birth is required</p>
+                <p className="text-error text-sm mt-1">
+                  Date of Birth is required
+                </p>
               )}
             </div>
 
@@ -120,7 +188,7 @@ const HrRegistration = () => {
               <input
                 type="password"
                 className="input input-bordered w-full"
-                {...register("password", { 
+                {...register("password", {
                   required: true,
                   pattern: /^.{6,}$/, // minimum 6 characters
                 })}
@@ -153,7 +221,6 @@ const HrRegistration = () => {
             </p>
           </div>
         </div>
-
       </div>
     </div>
   );

@@ -2,10 +2,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import useAuth from "../../../hooks/useAuth";
+import axios from "axios";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const EmployeeRegistration = () => {
-
-  const {registerUser} = useAuth()
+  const { registerUser, updateUserProfile } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
   const {
     register,
@@ -14,24 +16,71 @@ const EmployeeRegistration = () => {
   } = useForm();
 
   const handleRegister = (data) => {
+    console.log("Employee registration data:", data);
 
-    data.role ="employee";
+    const imageFile = data.photo[0];
+    console.log("image file-------------", imageFile);
 
-    console.log("Employee registration data:",data);
-    console.log(data.photo[0]);
     registerUser(data.email, data.password)
-    .then(res =>{
-      console.log('user created------------------------',res.user);
-    })
-    .catch(err =>{
-      console.log(err);
-    })
+      .then((result) => {
+        console.log("user created------------------------", result.user);
+
+        // 1.store the image in FormData
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        // 2. send the photo to store and get the url
+        const image_Api_url = `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_image_host_key
+        }`;
+
+        axios.post(image_Api_url, formData).then((res) => {
+          console.log("-------after image upload--------", res);
+          const photoURL = res.data.data.url;
+
+          const userInfo = {
+            email: data.email,
+            displayName: data.name,
+            photoURL: photoURL,
+            password: data.password,
+            dateOfBirth: data.dateOfBirth,
+            role: "employee",
+          };
+
+          // create user in database
+          axiosSecure
+            .post("/users", userInfo)
+            .then((res) => {
+              if (res.data.insertedId) {
+                console.log("----------user created in database---------", res);
+              }
+            })
+            .catch((error) => {
+              console.log("------------errorrrr", error);
+            });
+
+          // 3.update the profile to firebase
+          const userProfile = {
+            displayName: data.name,
+            photoURL: photoURL,
+          };
+          updateUserProfile(userProfile)
+            .then(() => {
+              console.log("user profle uploaded------------");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center py-14 px-4">
       <div className="grid md:grid-cols-2 bg-base-100 shadow-xl rounded-2xl overflow-hidden max-w-5xl w-full">
-
         {/* Form Section */}
         <div className="p-8 md:p-10 flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-secondary mb-2">
@@ -57,7 +106,6 @@ const EmployeeRegistration = () => {
           </div>
 
           <form onSubmit={handleSubmit(handleRegister)} className="space-y-4">
-
             {/* Full Name */}
             <div>
               <label className="label">Full Name</label>
@@ -70,8 +118,6 @@ const EmployeeRegistration = () => {
                 <p className="text-error text-sm mt-1">Name is required</p>
               )}
             </div>
-
-
 
             {/* Email */}
             <div>
@@ -163,7 +209,6 @@ const EmployeeRegistration = () => {
             </p>
           </div>
         </div>
-
       </div>
     </div>
   );
