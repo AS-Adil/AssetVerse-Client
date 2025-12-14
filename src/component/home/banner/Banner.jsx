@@ -6,7 +6,6 @@ const Banner = () => {
     <section
       className="relative min-h-[85vh] flex items-center"
       style={{
-        // backgroundImage: "url('https://i.ibb.co.com/vxtLCtYm/112016.jpg')",
         backgroundImage: "url('https://i.ibb.co.com/3yHcjxBx/banner-image.avif')",
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -43,7 +42,7 @@ const Banner = () => {
           className="mt-8 flex flex-wrap gap-4"
         >
           <button className="btn btn-primary px-8">Get Started</button>
-          <button className="btn btn-outline text-base-100 border-base-100">
+          <button className="btn btn-outline hover:bg-primary text-base-100 border-base-100">
             Request a Demo
           </button>
         </motion.div>

@@ -4,7 +4,7 @@ import { ChevronDown } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
 
 const Navbar = () => {
-//   const { user, logOut } = useAuth();
+  const { user, logOut } = useAuth();
   // console.log(user?.photoURL);
 
   const location = useLocation();
@@ -15,12 +15,11 @@ const Navbar = () => {
       <NavLink className="px-3 font-semibold" to={"/"}>
         Home
       </NavLink>
-      <NavLink className="px-3 font-semibold" to={"/add-model"}>
+      <NavLink className="px-3 font-semibold" to={"/employee-registration"}>
         Join as Employee
       </NavLink>
-      <NavLink className="px-3 font-semibold" to={"/models"}>
-         Join as HR Manager
-
+      <NavLink className="px-3 font-semibold" to={"/hr-registration"}>
+        Join as HR Manager
       </NavLink>
     </>
   );
@@ -68,16 +67,16 @@ const Navbar = () => {
           to={"/"}
           className="  hover:scale-103 text-S transition  rounded-full text-2xl font-bold"
         >
-            <h1 className='text-primary'>Asset<span className='text-accent'>Verse</span></h1>
+          <h1 className="text-primary">
+            Asset<span className="text-accent">Verse</span>
+          </h1>
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 space-x-3 text-lg">{links}</ul>
       </div>
 
-      {/* <div className="navbar-end">
-
-
+      <div className="navbar-end">
         {user ? (
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="m-1">
@@ -129,10 +128,11 @@ const Navbar = () => {
 
               <button
                 onClick={handleLogout}
-                className="bg-secondary shadow-xl mb-2 rounded-2xl cursor-pointer text-white font-semibold
-                py-1.5 w-[80%] mt-4 mx-auto shadow
-           hover:scale-102 transition duration-150
-           "
+          //       className="bg-secondary shadow-xl mb-2 rounded-2xl cursor-pointer text-white font-semibold
+          //       py-1.5 w-[80%] mt-4 mx-auto shadow
+          //  hover:scale-102 transition duration-150"
+          className="btn btn-primary w-2/3 mx-auto cursor-pointer"
+           
               >
                 Logout
               </button>
@@ -141,22 +141,17 @@ const Navbar = () => {
         ) : (
           <div>
             <div className="">
-              <Link
-                to={"/login"}
-                className="bg-secondary mx-2 px-5 py-1.5 rounded-2xl cursor-pointer text-white font-semibold "
-              >
-                Login
-              </Link>
+              <button className="btn btn-primary px-8 cursor-pointer">
+                <Link to={"/login"} className="  ">
+                  Login
+                </Link>
+              </button>
             </div>
           </div>
         )}
-      </div> */}
-
-
+      </div>
     </div>
   );
 };
 
 export default Navbar;
-
-
