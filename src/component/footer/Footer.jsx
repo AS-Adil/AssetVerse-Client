@@ -2,7 +2,9 @@ import { Mail, Phone, MapPin, Linkedin, Github, Twitter } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-secondary text-base-100">
+    // <footer className="bg-secondary text-base-100">
+      <footer className="bg-secondary text-base-100 border-t border-white/10">
+
       <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
         {/* ---------- Brand ---------- */}

@@ -39,7 +39,7 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="py-20 bg-base-100">
+    <section className="py-20 bg-base-200">
       <div className="max-w-7xl mx-auto px-6">
 
         <motion.div
@@ -80,7 +80,7 @@ const TestimonialsSection = () => {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 className="
-                  h-full bg-base-200 border border-base-200
+                  h-full bg-base-100 border border-base-200
                   rounded-xl p-8 shadow-sm
                   flex flex-col
                 "
