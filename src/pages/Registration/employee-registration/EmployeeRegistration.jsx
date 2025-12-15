@@ -42,9 +42,10 @@ const EmployeeRegistration = () => {
             email: data.email,
             displayName: data.name,
             photoURL: photoURL,
-            password: data.password,
             dateOfBirth: data.dateOfBirth,
             role: "employee",
+            createdAt:new Date().toLocaleDateString()
+
           };
 
           // create user in database

@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import { Eye, EyeOff } from "lucide-react";
+import useAuth from "../../hooks/useAuth";
+import Loading from "../../component/loading/Loading";
 
 const Login = () => {
+  const {signInuser, loading} = useAuth()
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -11,7 +17,19 @@ const Login = () => {
 
   const handleLogin = (data) => {
     console.log("Login data:", data);
+    signInuser(data.email, data.password)
+    .then(res =>{
+      console.log(res);
+    })
+    .catch(err =>{
+      console.log(err);
+    })
+
   };
+
+  if(loading){
+    return <Loading></Loading>
+  }
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
@@ -47,38 +65,35 @@ const Login = () => {
               )}
             </div>
 
-            {/* Password */}
+            {/* Password with Toggle */}
             <div>
               <label className="label">Password</label>
-              <input
-                type="password"
-                className="input input-bordered w-full"
-                {...register("password", {
-                  required: true,
-                  pattern: /^.{6,}$/,
-                })}
-                placeholder="Password"
-              />
+
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="input input-bordered w-full pr-12"
+                  {...register("password", {
+                    required: true,
+                    pattern: /^.{6,}$/,
+                  })}
+                  placeholder="Password"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 z-10 top-1/2 -translate-y-1/2 text-neutral hover:text-secondary"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+
               {errors.password && (
                 <p className="text-error text-sm mt-1">
                   Minimum 6 characters required
                 </p>
               )}
-            </div>
-
-            {/* Extra Actions */}
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="checkbox checkbox-sm" />
-                <span className="text-neutral">Remember me</span>
-              </label>
-
-              <Link
-                to="/forgot-password"
-                className="text-primary hover:underline font-medium"
-              >
-                Forgot password?
-              </Link>
             </div>
 
             <button className="btn btn-primary w-full mt-6">

@@ -14,6 +14,7 @@ const HrRegistration = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+   
 
 
 
@@ -51,6 +52,7 @@ const HrRegistration = () => {
             packageLimit: 5,
             currentEmployees: 0,
             subscription: "basic",
+            createdAt:new Date().toLocaleDateString()
           };
 
           // create user in database
@@ -67,7 +69,7 @@ const HrRegistration = () => {
 
           // 3.update the profile to firebase
           const userProfile = {
-            displayName: data.name,
+            displayName: data.companyName,
             photoURL: photoURL,
           };
           updateUserProfile(userProfile)

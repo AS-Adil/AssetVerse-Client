@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router";
-import Resgister from "../pages/Auth/register/Resgister";
 import MainLyout from "../layouts/main-layouts/MainLyout";
 import Home from "../pages/home/Home";
 import HrRegistration from "../pages/Registration/hr-registration/HrRegistration";
