@@ -2,13 +2,43 @@ import { Link, NavLink, useLocation } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
 import { ChevronDown } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
+import useRole from "../../hooks/useRole";
+import {
+  Boxes,
+  PlusSquare,
+  ClipboardList,
+  Users,
+  UserCog,
+  Briefcase,
+  Users2,
+  Send,
+  User,
+  LogOut
+} from "lucide-react";
+
+
+const NavItem = ({ to, label, icon: Icon }) => (
+  <Link
+    to={to}
+    className="
+      flex items-center gap-3
+      px-3 py-2 rounded-lg
+      text-secondary font-medium
+      hover:bg-base-200 hover:text-primary
+      transition
+    "
+  >
+    <Icon className="w-4 h-4 opacity-80" />
+    <span>{label}</span>
+  </Link>
+);
+
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
   // console.log(user?.photoURL);
-
-  const location = useLocation();
-  // console.log('route is',location.pathname);
+  const { role, roleLoading } = useRole();
+  console.log('role from dropdown --------------,',role);
 
   const links = (
     <>
@@ -33,6 +63,10 @@ const Navbar = () => {
         toast.error(error.message);
       });
   };
+
+
+
+
 
   return (
     // <div className="navbar bg-base-100 shadow-sm fixed top-0 w-full z-50">
@@ -78,7 +112,7 @@ const Navbar = () => {
 
       <div className="navbar-end">
         {user ? (
-          <div className="dropdown dropdown-end">
+          <div className="dropdown dropdown-end ">
             <div tabIndex={0} role="button" className="m-1">
               <img
                 className="rounded-full w-9 h-9"
@@ -86,57 +120,78 @@ const Navbar = () => {
                 alt=""
               />
             </div>
+            {/* ----------- drop down start------------------- */}
 
-            <ul
-              tabIndex="-1"
-              className="dropdown-content menu bg-base-200 rounded-box z-1 w-[280px] p-2 shadow-sm "
-            >
-              <img
-                className="mx-auto shadow rounded-full w-15 h-15"
-                src={user?.photoURL}
-                alt=""
-              />
+<ul
+  tabIndex={-1}
+  className="
+    dropdown-content
+    bg-base-100
+    rounded-xl
+    w-72
+    p-4
+    shadow-lg
+    border border-base-200
+  "
+>
+  {/* Profile */}
+  <div className="text-center mb-4">
+    <img
+      className="mx-auto w-14 h-14 rounded-full ring-2 ring-primary/30"
+      src={user?.photoURL}
+      alt=""
+    />
+    <p className="text-sm text-neutral mt-2">{user?.email}</p>
+    <h2 className="font-semibold text-secondary">
+      {user?.displayName}
+    </h2>
 
-              <p className="text-xs text-center mt-1 font-thin text-base-content">
-                {user?.email}
-              </p>
-              <h1 className="text-lg text-base-content font-semibold text-center ">
-                {user?.displayName}
-              </h1>
+    <span className="inline-block mt-1 text-xs font-semibold text-primary uppercase">
+      {role === "hr" ? "HR Manager" : "Employee"}
+    </span>
+  </div>
 
-              <div className=" mx-auto mt-2 rounded-xl  p-2 flex">
-                <Link
-                  className={`text-base-content border border-gray-300 shadow-xl rounded-l-xl py-1.5 px-2  hover:scale-102 transition duration-150 ${
-                    location.pathname === "/model-purchase" &&
-                    "bg-secondary text-white"
-                  }`}
-                  to={"/model-purchase"}
-                >
-                  Model Purchase
-                </Link>
+  <div className="divider my-2"></div>
 
-                <Link
-                  className={`text-base-content border border-gray-300 shadow-xl border-l-0 rounded-r-xl px-3 py-1.5  hover:scale-102 transition duration-150 ${
-                    location.pathname === "/my-models" &&
-                    "bg-secondary text-white"
-                  }`}
-                  to={"/my-models"}
-                >
-                  My Models
-                </Link>
-              </div>
+  {/* Role based navigation */}
+  <div className="space-y-1">
 
-              <button
-                onClick={handleLogout}
-          //       className="bg-secondary shadow-xl mb-2 rounded-2xl cursor-pointer text-white font-semibold
-          //       py-1.5 w-[80%] mt-4 mx-auto shadow
-          //  hover:scale-102 transition duration-150"
-          className="btn btn-primary w-2/3 mx-auto cursor-pointer"
-           
-              >
-                Logout
-              </button>
-            </ul>
+{role === "hr" && (
+  <>
+    <NavItem to="/dashboard/asset-list" label="Asset List" icon={Boxes} />
+    <NavItem to="/dashboard/add-asset" label="Add Asset" icon={PlusSquare} />
+    <NavItem to="/dashboard/all-requests" label="All Requests" icon={ClipboardList} />
+    <NavItem to="/dashboard/employee-list" label="Employee List" icon={Users} />
+    <NavItem to="/dashboard/profile" label="Profile" icon={UserCog} />
+  </>
+)}
+
+
+{role === "employee" && (
+  <>
+    <NavItem to="/dashboard/my-asset" label="My Assets" icon={Briefcase} />
+    <NavItem to="/dashboard/my-team" label="My Team" icon={Users2} />
+    <NavItem to="/dashboard/request-asset" label="Request Asset" icon={Send} />
+    <NavItem to="/dashboard/profile" label="Profile" icon={User} />
+  </>
+)}
+
+  </div>
+
+  <div className="divider my-3"></div>
+
+  {/* Logout */}
+<button
+  onClick={handleLogout}
+  className="btn btn-primary text-white font-semibold btn-sm w-full flex items-center gap-2 justify-center"
+>
+  <LogOut size={16} />
+  Logout
+</button>
+</ul>
+
+
+            {/* ----------- drop down start------------------- */}
           </div>
         ) : (
           <div>

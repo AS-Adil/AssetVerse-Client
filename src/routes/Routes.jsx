@@ -4,6 +4,8 @@ import Home from "../pages/home/Home";
 import HrRegistration from "../pages/Registration/hr-registration/HrRegistration";
 import EmployeeRegistration from "../pages/Registration/employee-registration/EmployeeRegistration";
 import Login from "../pages/login/Login";
+import DashboardLayout from "../layouts/main-layouts/dashboard-layout/DashboardLayout";
+import App from "../App";
 
 export const router = createBrowserRouter([
   {
@@ -29,4 +31,14 @@ export const router = createBrowserRouter([
 
     ]
   },
+  {
+    path:'dashboard',
+    element:<DashboardLayout></DashboardLayout>,
+    children:[
+      {
+        path:'app',
+        Component:App
+      }
+    ]
+  }
 ]);
