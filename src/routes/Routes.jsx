@@ -6,6 +6,7 @@ import EmployeeRegistration from "../pages/Registration/employee-registration/Em
 import Login from "../pages/login/Login";
 import DashboardLayout from "../layouts/main-layouts/dashboard-layout/DashboardLayout";
 import App from "../App";
+import Error404 from "../pages/erro-page/Error404";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ export const router = createBrowserRouter([
       {
         path:'login',
         Component:Login
+      },
+      {
+        path: "*",
+        Component: Error404
       }
 
     ]
@@ -38,7 +43,12 @@ export const router = createBrowserRouter([
       {
         path:'app',
         Component:App
+      },
+      {
+        path: "*",
+        Component: Error404
       }
     ]
   }
+
 ]);

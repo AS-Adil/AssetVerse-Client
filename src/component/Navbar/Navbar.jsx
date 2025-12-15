@@ -195,13 +195,15 @@ const Navbar = () => {
           </div>
         ) : (
           <div>
-            <div className="">
-              <button className="btn btn-primary px-8 cursor-pointer">
-                <Link to={"/login"} className="  ">
-                  Login
-                </Link>
-              </button>
-            </div>
+            
+<Link
+  to="/login"
+  className="btn btn-primary px-8 cursor-pointer"
+>
+  Login
+</Link>
+
+         
           </div>
         )}
       </div>
