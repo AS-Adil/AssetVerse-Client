@@ -13,7 +13,7 @@ import {
   Users2,
   Send,
   User,
-  LogOut
+  LogOut,
 } from "lucide-react";
 
 
@@ -33,12 +33,11 @@ const NavItem = ({ to, label, icon: Icon }) => (
   </Link>
 );
 
-
 const Navbar = () => {
   const { user, logOut } = useAuth();
   // console.log(user?.photoURL);
   const { role, roleLoading } = useRole();
-  console.log('role from dropdown --------------,',role);
+  console.log("role from dropdown --------------,", role);
 
   const links = (
     <>
@@ -63,10 +62,6 @@ const Navbar = () => {
         toast.error(error.message);
       });
   };
-
-
-
-
 
   return (
     // <div className="navbar bg-base-100 shadow-sm fixed top-0 w-full z-50">
@@ -122,9 +117,9 @@ const Navbar = () => {
             </div>
             {/* ----------- drop down start------------------- */}
 
-<ul
-  tabIndex={-1}
-  className="
+            <ul
+              tabIndex={-1}
+              className="
     dropdown-content
     bg-base-100
     rounded-xl
@@ -133,77 +128,106 @@ const Navbar = () => {
     shadow-lg
     border border-base-200
   "
->
-  {/* Profile */}
-  <div className="text-center mb-4">
-    <img
-      className="mx-auto w-14 h-14 rounded-full ring-2 ring-primary/30"
-      src={user?.photoURL}
-      alt=""
-    />
-    <p className="text-sm text-neutral mt-2">{user?.email}</p>
-    <h2 className="font-semibold text-secondary">
-      {user?.displayName}
-    </h2>
+            >
+              {/* Profile */}
+              <div className="text-center mb-4">
+                <img
+                  className="mx-auto w-14 h-14 rounded-full ring-2 ring-primary/30"
+                  src={user?.photoURL}
+                  alt=""
+                />
+                <p className="text-sm text-neutral mt-2">{user?.email}</p>
+                <h2 className="font-semibold text-secondary">
+                  {user?.displayName}
+                </h2>
 
-    <span className="inline-block mt-1 text-xs font-semibold text-primary uppercase">
-      {role === "hr" ? "HR Manager" : "Employee"}
-    </span>
-  </div>
+                <span className="inline-block mt-1 text-xs font-semibold text-primary uppercase">
+                  {role === "hr" ? "HR Manager" : "Employee"}
+                </span>
+              </div>
 
-  <div className="divider my-2"></div>
+              <div className="divider my-2"></div>
 
-  {/* Role based navigation */}
-  <div className="space-y-1">
+              {/* Role based navigation */}
+              <div className="space-y-1">
+                {role === "hr" && (
+                  <>
+                    <NavItem
+                      to="/dashboard/asset-list"
+                      label="Asset List"
+                      icon={Boxes}
+                    />
+                    <NavItem
+                      to="/dashboard/add-asset"
+                      label="Add Asset"
+                      icon={PlusSquare}
+                    />
+                    <NavItem
+                      to="/dashboard/all-requests"
+                      label="All Requests"
+                      icon={ClipboardList}
+                    />
+                    <NavItem
+                      to="/dashboard/employee-list"
+                      label="Employee List"
+                      icon={Users}
+                    />
+                    <NavItem
+                      to="/dashboard/profile"
+                      label="Profile"
+                      icon={UserCog}
+                    />
+                  </>
+                )}
 
-{role === "hr" && (
-  <>
-    <NavItem to="/dashboard/asset-list" label="Asset List" icon={Boxes} />
-    <NavItem to="/dashboard/add-asset" label="Add Asset" icon={PlusSquare} />
-    <NavItem to="/dashboard/all-requests" label="All Requests" icon={ClipboardList} />
-    <NavItem to="/dashboard/employee-list" label="Employee List" icon={Users} />
-    <NavItem to="/dashboard/profile" label="Profile" icon={UserCog} />
-  </>
-)}
+                {role === "employee" && (
+                  <>
+                    <NavItem
+                      to="/dashboard/my-asset"
+                      label="My Assets"
+                      icon={Briefcase}
+                    />
+                    <NavItem
+                      to="/dashboard/my-team"
+                      label="My Team"
+                      icon={Users2}
+                    />
+                    <NavItem
+                      to="/dashboard/request-asset"
+                      label="Request Asset"
+                      icon={Send}
+                    />
+                    <NavItem
+                      to="/dashboard/profile"
+                      label="Profile"
+                      icon={User}
+                    />
+                  </>
+                )}
+              </div>
 
+              <div className="divider my-3"></div>
 
-{role === "employee" && (
-  <>
-    <NavItem to="/dashboard/my-asset" label="My Assets" icon={Briefcase} />
-    <NavItem to="/dashboard/my-team" label="My Team" icon={Users2} />
-    <NavItem to="/dashboard/request-asset" label="Request Asset" icon={Send} />
-    <NavItem to="/dashboard/profile" label="Profile" icon={User} />
-  </>
-)}
-
-  </div>
-
-  <div className="divider my-3"></div>
-
-  {/* Logout */}
-<button
-  onClick={handleLogout}
-  className="btn btn-primary text-white font-semibold btn-sm w-full flex items-center gap-2 justify-center"
->
-  <LogOut size={16} />
-  Logout
-</button>
-</ul>
-
+              {/* Logout */}
+              <button
+                onClick={handleLogout}
+                className="btn btn-primary text-white font-semibold btn-sm w-full flex items-center gap-2 justify-center"
+              >
+                <LogOut size={16} />
+                Logout
+              </button>
+            </ul>
 
             {/* ----------- drop down start------------------- */}
           </div>
         ) : (
           <div>
-            
-<Link
-  to="/login"
-  className="btn btn-primary px-8 cursor-pointer"
->
-  Login
-</Link>
-
-         
+            <Link
+              to="/login"
+              className="btn btn-primary px-8 cursor-pointer flex items-center gap-2"
+            >
+              Login
+            </Link>
           </div>
         )}
       </div>

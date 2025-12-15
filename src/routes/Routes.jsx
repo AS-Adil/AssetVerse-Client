@@ -4,7 +4,7 @@ import Home from "../pages/home/Home";
 import HrRegistration from "../pages/Registration/hr-registration/HrRegistration";
 import EmployeeRegistration from "../pages/Registration/employee-registration/EmployeeRegistration";
 import Login from "../pages/login/Login";
-import DashboardLayout from "../layouts/main-layouts/dashboard-layout/DashboardLayout";
+import DashboardLayout from "../layouts/dashboard-layout/DashboardLayout";
 import App from "../App";
 import Error404 from "../pages/erro-page/Error404";
 
