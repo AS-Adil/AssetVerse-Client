@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
@@ -8,6 +8,8 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 const EmployeeRegistration = () => {
   const { registerUser, updateUserProfile } = useAuth();
   const axiosSecure = useAxiosSecure();
+
+  const navigate = useNavigate()
 
   const {
     register,
@@ -73,6 +75,8 @@ const EmployeeRegistration = () => {
               console.log(error);
             });
         });
+
+        navigate('/')
       })
       .catch((err) => {
         console.log(err);
@@ -193,6 +197,15 @@ const EmployeeRegistration = () => {
               Create Account
             </button>
           </form>
+                              <p className="text-sm text-center text-neutral mt-6">
+                                Already have an account?{" "}
+                                <Link
+                                  to="/login"
+                                  className="text-primary font-semibold hover:underline"
+                                >
+                                 Login
+                                </Link>
+                              </p>
         </div>
 
         {/* Image Section */}

@@ -3,16 +3,12 @@ import useAuth from "../hooks/useAuth";
 import useRole from "../hooks/useRole";
 import Loading from "../component/loading/Loading";
 
-
-
 const EmployeeRoute = ({ children }) => {
   const { loading } = useAuth();
   const { role, roleLoading } = useRole();
 
   if (loading || roleLoading) {
-    return (
-    <Loading />
-    );
+    return <Loading />;
   }
 
   if (role !== "employee") {
@@ -27,4 +23,3 @@ const EmployeeRoute = ({ children }) => {
 };
 
 export default EmployeeRoute;
-

@@ -1,7 +1,24 @@
 import React from 'react';
-import { Link, Outlet } from 'react-router';
+import { Link, NavLink, Outlet } from 'react-router';
+import {
+  Boxes,
+  PlusSquare,
+  ClipboardList,
+  Users,
+  UserCog,
+  Briefcase,
+  Users2,
+  Send,
+  User,
+ 
+} from "lucide-react";
+import useRole from '../../hooks/useRole';
+
 
 const DashboardLayout = () => {
+
+  const {role} =useRole()
+
     return (
         <div>
             <div className="drawer lg:drawer-open">
@@ -31,19 +48,79 @@ const DashboardLayout = () => {
           <button className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Homepage">
             {/* Home icon */}
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-            <span className="is-drawer-close:hidden">Homepage</span>
+            <span className="is-drawer-close:hidden">Home</span>
           </button>
           </Link>
         </li>
 
 
         {/* List item */}
-        <li>
-          <button className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Settings">
+
+        {role ==='hr' &&<>
+        
+  
+        <li className='text-secondary font-medium hover:bg-base-200 hover:text-primary transition'>
+          <NavLink to={'/dashboard/add-asset'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Asset list">
             {/* Settings icon */}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle cx="17" cy="17" r="3"></circle><circle cx="7" cy="7" r="3"></circle></svg>
-            <span className="is-drawer-close:hidden">Settings</span>
-          </button>
+
+              <Boxes />
+
+            <span className="is-drawer-close:hidden">Asset list</span>
+          </NavLink>
+        </li>
+
+        <li className='text-secondary font-medium hover:bg-base-200 hover:text-primary transition'>
+          <NavLink to={'/dashboard/add-asset'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Add Asset">
+            {/* Settings icon */}
+
+              <PlusSquare/>
+
+            <span className="is-drawer-close:hidden">Add Asset</span>
+          </NavLink>
+        </li>
+
+
+        <li className='text-secondary font-medium hover:bg-base-200 hover:text-primary transition'>
+          <NavLink to={'/dashboard/add-asset'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="All Requests">
+            {/* Settings icon */}
+
+              <ClipboardList />
+
+            <span className="is-drawer-close:hidden">All Requests</span>
+          </NavLink>
+        </li>
+
+
+        <li className='text-secondary font-medium hover:bg-base-200 hover:text-primary transition'>
+          <NavLink to={'/dashboard/add-asset'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Employee List">
+            {/* Settings icon */}
+
+              <User />
+
+            <span className="is-drawer-close:hidden">Employee List</span>
+          </NavLink>
+        </li>
+
+       </> }
+
+       {role ==='employee' &&<>
+       
+       
+       
+       
+       </>}
+
+
+
+
+        <li className='text-secondary font-medium hover:bg-base-200 hover:text-primary transition'>
+          <NavLink to={'/dashboard/add-asset'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Profile">
+            {/* Settings icon */}
+
+              <UserCog/>
+
+            <span className="is-drawer-close:hidden">Profile</span>
+          </NavLink>
         </li>
 
 

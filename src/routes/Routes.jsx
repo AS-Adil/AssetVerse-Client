@@ -7,6 +7,10 @@ import Login from "../pages/login/Login";
 import DashboardLayout from "../layouts/dashboard-layout/DashboardLayout";
 import App from "../App";
 import Error404 from "../pages/erro-page/Error404";
+import DashboardHome from "../pages/dashboard/dashboard-home/DashboardHome";
+import HrRoute from "./HrRoute";
+import AddAssets from "../pages/dashboard/add-assets/AddAssets";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -38,11 +42,15 @@ export const router = createBrowserRouter([
   },
   {
     path:'dashboard',
-    element:<DashboardLayout></DashboardLayout>,
+    element:<PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
     children:[
       {
-        path:'app',
-        Component:App
+        index:true,
+        Component:DashboardHome
+      },
+      {
+        path:'add-asset',
+        element:<HrRoute><AddAssets></AddAssets></HrRoute>
       },
       {
         path: "*",

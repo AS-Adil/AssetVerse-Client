@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Eye, EyeOff } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
 import Loading from "../../component/loading/Loading";
@@ -8,6 +8,8 @@ import Loading from "../../component/loading/Loading";
 const Login = () => {
   const {signInuser, loading} = useAuth()
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate()
 
   const {
     register,
@@ -20,6 +22,7 @@ const Login = () => {
     signInuser(data.email, data.password)
     .then(res =>{
       console.log(res);
+      navigate('/')
     })
     .catch(err =>{
       console.log(err);
@@ -98,7 +101,6 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Register Redirect */}
           <p className="text-sm text-center text-neutral mt-6">
             Don’t have an account?{" "}
             <Link
@@ -110,7 +112,6 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Image Section */}
         <div className="hidden md:flex relative">
           <img
             src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80"
