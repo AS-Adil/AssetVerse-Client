@@ -20,7 +20,7 @@ const AddAssets = () => {
     formState: { errors },
   } = useForm();
 
-  const { data: userInfo = [], isLoading } = useQuery({
+  const { data: userInfo = {}, isLoading } = useQuery({
     queryKey: ["userInfo", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users?email=${user?.email}`);
