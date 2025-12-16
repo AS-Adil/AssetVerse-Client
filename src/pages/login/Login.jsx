@@ -18,10 +18,10 @@ const Login = () => {
   } = useForm();
 
   const handleLogin = (data) => {
-    console.log("Login data:", data);
+    // console.log("Login data:", data);
     signInuser(data.email, data.password)
     .then(res =>{
-      console.log(res);
+      // console.log(res);
       navigate('/')
     })
     .catch(err =>{

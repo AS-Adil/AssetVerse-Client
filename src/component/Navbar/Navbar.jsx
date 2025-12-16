@@ -37,7 +37,7 @@ const Navbar = () => {
   const { user, logOut } = useAuth();
   // console.log(user?.photoURL);
   const { role, roleLoading } = useRole();
-  console.log("role from dropdown --------------,", role);
+  // console.log("role from dropdown --------------,", role);
 
   const links = (
     <>
