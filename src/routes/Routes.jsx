@@ -11,6 +11,9 @@ import DashboardHome from "../pages/dashboard/dashboard-home/DashboardHome";
 import HrRoute from "./HrRoute";
 import AddAssets from "../pages/dashboard/add-assets/AddAssets";
 import PrivateRoute from "./PrivateRoute";
+import AssetList from "../pages/dashboard/asset-list/AssetList";
+import EmployeeRoute from "./EmployeeRoute";
+import RequestAsset from "../pages/dashboard/request-asset/RequestAsset";
 
 export const router = createBrowserRouter([
   {
@@ -53,8 +56,16 @@ export const router = createBrowserRouter([
         element:<HrRoute><AddAssets></AddAssets></HrRoute>
       },
       {
+        path:'asset-list',
+        element:<HrRoute><AssetList></AssetList></HrRoute>
+      },
+      {
         path: "*",
         Component: Error404
+      },
+      {
+        path: 'request-asset',
+        element:<EmployeeRoute><RequestAsset></RequestAsset></EmployeeRoute>
       }
     ]
   }

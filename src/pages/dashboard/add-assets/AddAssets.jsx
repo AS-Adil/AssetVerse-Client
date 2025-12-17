@@ -6,11 +6,12 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../../component/loading/Loading";
+import { useNavigate } from "react-router";
 
 const AddAssets = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
-
+  const navigate = useNavigate()
   const [adding, setAdding] = useState(false);
 
   const {
@@ -57,6 +58,7 @@ const AddAssets = () => {
 
       if (res.data.insertedId) {
         toast.success("Asset added successfully");
+        navigate('/dashboard/asset-list')
         reset();
       }
     } catch (error) {

@@ -107,7 +107,7 @@ const DashboardLayout = () => {
                 <>
                   <li>
                     <SidebarItem
-                      to="/dashboard"
+                      to="/dashboard/asset-list"
                       label="Asset List"
                       icon={Boxes}
                     />
