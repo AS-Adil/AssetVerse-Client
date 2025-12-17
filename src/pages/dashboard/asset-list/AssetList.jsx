@@ -79,7 +79,7 @@ const AssetList = () => {
     const updatedInfo = {
         productName: editingAsset.productName,
       productType: editingAsset.productType,
-      productQuantity: editingAsset.productQuantity,
+      availableQuantity: editingAsset.availableQuantity,
       productImage: imageUrl,
     }
      axiosSecure.patch(`/assets/${id}`, updatedInfo)
@@ -186,7 +186,7 @@ const AssetList = () => {
                     </span>
                   </td>
 
-                  <td className="font-semibold">{asset.productQuantity}</td>
+                  <td className="font-semibold">{asset.availableQuantity}</td>
 
                   <td className="text-sm text-neutral">
                     {new Date(asset.dateAdded).toLocaleDateString("en-GB")}
@@ -309,16 +309,16 @@ const AssetList = () => {
 
               <div>
                 <label className="label">
-                  <span className="label-text font-medium">Total Quantity</span>
+                  <span className="label-text font-medium">Available Quantity</span>
                 </label>
                 <input
                   type="number"
                   min={1}
-                  defaultValue={editingAsset.productQuantity}
+                  defaultValue={editingAsset.availableQuantity}
                   onChange={(e) =>
                     setEditingAsset({
                       ...editingAsset,
-                      productQuantity: Number(e.target.value),
+                      availableQuantity: Number(e.target.value),
                     })
                   }
                   className="input input-bordered w-full"

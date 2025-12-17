@@ -14,6 +14,7 @@ import PrivateRoute from "./PrivateRoute";
 import AssetList from "../pages/dashboard/asset-list/AssetList";
 import EmployeeRoute from "./EmployeeRoute";
 import RequestAsset from "../pages/dashboard/request-asset/RequestAsset";
+import AllRequests from "../pages/dashboard/all-requests/AllRequests";
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
       {
         path: 'request-asset',
         element:<EmployeeRoute><RequestAsset></RequestAsset></EmployeeRoute>
+      },
+      {
+        path:'all-requests',
+        element:<HrRoute><AllRequests></AllRequests></HrRoute>
       }
     ]
   }

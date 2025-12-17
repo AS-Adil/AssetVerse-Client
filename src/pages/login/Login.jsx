@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router";
 import { Eye, EyeOff } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
 import Loading from "../../component/loading/Loading";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const {signInuser, loading} = useAuth()
@@ -22,6 +23,8 @@ const Login = () => {
     signInuser(data.email, data.password)
     .then(res =>{
       // console.log(res);
+      toast.success(`Logged In Successfully`);
+
       navigate('/')
     })
     .catch(err =>{
