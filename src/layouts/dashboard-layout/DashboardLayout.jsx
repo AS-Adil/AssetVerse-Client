@@ -131,8 +131,8 @@ const DashboardLayout = () => {
 
                   <li>
                     <SidebarItem
-                      to="/dashboard/employee-list"
-                      label="Employee List"
+                      to="/dashboard/my-employee-list"
+                      label="My Employee List"
                       icon={Users}
                     />
                   </li>

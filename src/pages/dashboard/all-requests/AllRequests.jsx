@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import Loading from "../../../component/loading/Loading";
-import { Check, X, Clock, CheckCircle, XCircle, AwardIcon, CheckCheck } from "lucide-react";
+import { Check, X, Clock, CheckCircle, XCircle, AwardIcon, CheckCheck, CircleX } from "lucide-react";
 import Swal from "sweetalert2";
 
 const AllRequests = () => {
@@ -178,13 +178,26 @@ const handleReject = (request) => {
 
                         }
 
-                        <button
-                          className="btn btn-xs btn-error flex items-center py-3.5 px-3.5 gap-1 font-bold text-gray-100 text-center hover:scale-105 transition-all duration-200"
+                        {
+                          req.requestStatus==="rejected" ? 
+                                                <button
+                          className="btn btn-xs bg-red-600 cursor-default btn-error  flex items-center py-3.5 px-3 gap-1 font-bold text-gray-100 text-center "
+                          
+                          title="Reject Request"
+                        >
+                          <CircleX size={16} /> Rejected
+                        </button>
+                        :
+                                              <button
+                          className="btn btn-xs btn-error flex items-center py-3.5 px-4 gap-1 font-bold text-gray-100 text-center hover:scale-105 transition-all duration-200"
                           onClick={() => handleReject(req)}
                           title="Reject Request"
                         >
                           <X size={16} /> Reject
                         </button>
+                        }
+
+  
                       </div>
                     </td>
                   </tr>
