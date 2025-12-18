@@ -152,7 +152,7 @@ const DashboardLayout = () => {
                 <>
                   <li>
                     <SidebarItem
-                      to="/dashboard/my-asset"
+                      to="/dashboard/my-assets"
                       label="My Assets"
                       icon={Briefcase}
                     />

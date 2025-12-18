@@ -168,7 +168,7 @@ const Navbar = () => {
                       icon={ClipboardList}
                     />
                     <NavItem
-                      to="/dashboard/employee-list"
+                      to="/dashboard/my-employee-list"
                       label="Employee List"
                       icon={Users}
                     />
@@ -183,7 +183,7 @@ const Navbar = () => {
                 {role === "employee" && (
                   <>
                     <NavItem
-                      to="/dashboard/my-asset"
+                      to="/dashboard/my-assets"
                       label="My Assets"
                       icon={Briefcase}
                     />

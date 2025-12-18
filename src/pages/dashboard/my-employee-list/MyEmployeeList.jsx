@@ -11,7 +11,7 @@ const MyEmployeeList = () => {
   const axiosSecure = useAxiosSecure();
 
   const {
-    data: employees,
+    data: employees =[],
     isLoading,
     refetch,
   } = useQuery({

@@ -3,14 +3,27 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import Loading from "../../../component/loading/Loading";
-import { Check, X, Clock, CheckCircle, XCircle, AwardIcon, CheckCheck, CircleX } from "lucide-react";
+import {
+  Check,
+  X,
+  Clock,
+  CheckCircle,
+  XCircle,
+  AwardIcon,
+  CheckCheck,
+  CircleX,
+} from "lucide-react";
 import Swal from "sweetalert2";
 
 const AllRequests = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
-  const { data: requests = [], isLoading, refetch } = useQuery({
+  const {
+    data: requests = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["all-requests", user.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/requests?email=${user.email}`);
@@ -34,7 +47,9 @@ const AllRequests = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axiosSecure.patch(`/requests/${request._id}/approve`, { hrEmail: user.email });
+          await axiosSecure.patch(`/requests/${request._id}/approve`, {
+            hrEmail: user.email,
+          });
 
           Swal.fire({
             title: `${request.requesterName} set to Approved`,
@@ -42,31 +57,28 @@ const AllRequests = () => {
             icon: "success",
           });
 
-          refetch()
-          
+          refetch();
         } catch (error) {
           console.log(error);
           Swal.fire("Error", "Failed to approve request", "error");
-
         }
       }
     });
   };
 
-
-const handleReject = (request) => {
-  Swal.fire({
-    title: "Reject Request?",
-    text: `Do you want ot set ${request.requesterName} as Rejected`,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#EF4444",
-    cancelButtonColor: "#64748B",
-    confirmButtonText: "Reject",
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        await axiosSecure.patch(`/requests/${request._id}/reject`);
+  const handleReject = (request) => {
+    Swal.fire({
+      title: "Reject Request?",
+      text: `Do you want ot set ${request.requesterName} as Rejected`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#EF4444",
+      cancelButtonColor: "#64748B",
+      confirmButtonText: "Reject",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axiosSecure.patch(`/requests/${request._id}/reject`);
 
           Swal.fire({
             title: `${request.requesterName} set to Rejected`,
@@ -74,16 +86,14 @@ const handleReject = (request) => {
             icon: "success",
           });
 
- 
-        refetch();
-      } catch (error) {
-        console.error(error);
-        Swal.fire("Error", "Failed to reject request", "error");
+          refetch();
+        } catch (error) {
+          console.error(error);
+          Swal.fire("Error", "Failed to reject request", "error");
+        }
       }
-    }
-  });
-};
-
+    });
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -151,55 +161,64 @@ const handleReject = (request) => {
                       </span>
                     </td>
 
-                    <td>
-                      <div className="flex justify-center gap-2 ">
 
-                        {req.requestStatus==="approved" ? 
-                        
-                        
-                       
-                         <button
-                          className="btn btn-xs cursor-default  bg-green-700 flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 "
-                          
-                          title="Request Approved"
-                        >
-                           <CheckCheck size={16} />  Approved
-                        </button>
-                        
-                        
-                        :
-                        <button
-                          className="btn btn-xs btn-success flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 hover:scale-105 transition-all duration-200"
-                          onClick={() => handleApprove(req)}
-                          title="Approve Request"
-                        >
-                          <Check size={16} /> Approve
-                        </button>
+                    
 
-                        }
+<td>
+  <div className="flex justify-center gap-2">
+    {req.requestStatus === "pending" && (
+      <>
+        <button
+          className="btn btn-xs btn-success flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 hover:scale-105 transition-all duration-200"
+          onClick={() => handleApprove(req)}
+          title="Approve Request"
+        >
+          <Check size={16} /> Approve
+        </button>
 
-                        {
-                          req.requestStatus==="rejected" ? 
-                                                <button
-                          className="btn btn-xs bg-red-600 cursor-default btn-error  flex items-center py-3.5 px-3 gap-1 font-bold text-gray-100 text-center "
-                          
-                          title="Reject Request"
-                        >
-                          <CircleX size={16} /> Rejected
-                        </button>
-                        :
-                                              <button
-                          className="btn btn-xs btn-error flex items-center py-3.5 px-4 gap-1 font-bold text-gray-100 text-center hover:scale-105 transition-all duration-200"
-                          onClick={() => handleReject(req)}
-                          title="Reject Request"
-                        >
-                          <X size={16} /> Reject
-                        </button>
-                        }
+        <button
+          className="btn btn-xs btn-error flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 px-4 hover:scale-105 transition-all duration-200"
+          onClick={() => handleReject(req)}
+          title="Reject Request"
+        >
+          <X size={16} /> Reject
+        </button>
+      </>
+    )}
 
-  
-                      </div>
-                    </td>
+    {req.requestStatus === "approved" && (
+      <button
+        className="btn btn-xs flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 bg-green-700 cursor-default"
+        title="Request Approved"
+        disabled
+      >
+        <CheckCheck size={16} /> Approved
+      </button>
+    )}
+
+    {req.requestStatus === "rejected" && (
+      <button
+        className="btn btn-xs flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 bg-red-600 cursor-default"
+        title="Request Rejected"
+        disabled
+      >
+        <CircleX size={16} /> Rejected
+      </button>
+    )}
+  </div>
+</td>
+
+
+
+
+
+
+
+
+
+
+
+
                   </tr>
                 ))
               ) : (
