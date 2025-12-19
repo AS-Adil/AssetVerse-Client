@@ -34,7 +34,7 @@ const AllRequests = () => {
   if (isLoading) return <Loading />;
 
   const handleApprove = (request) => {
-    console.log("Approve request:", request);
+    // console.log("Approve request:", request);
 
     Swal.fire({
       title: "Approve Request ?",
