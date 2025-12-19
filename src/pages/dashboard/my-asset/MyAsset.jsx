@@ -71,7 +71,7 @@ const MyAssets = () => {
                   <th className="text-center">Company</th>
                   <th className="text-center">Assigned Date</th>
                   <th className="text-center">Status</th>
-                  {/* <th className="text-center">Action</th> */}
+                  <th className="text-center">Action</th>
                 </tr>
               </thead>
 
@@ -128,7 +128,7 @@ const MyAssets = () => {
                       </span>
                     </td>
 
-                    {/* <td className="text-center">
+                    <td className="text-center">
                       {asset.assetType === "Returnable" &&
                       asset.status === "assigned" ? (
                         <button className="btn btn-xs btn-accent">
@@ -137,7 +137,7 @@ const MyAssets = () => {
                       ) : (
                         "-"
                       )}
-                    </td> */}
+                    </td>
                   </tr>
                 ))}
               </tbody>

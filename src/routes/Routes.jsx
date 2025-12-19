@@ -19,6 +19,8 @@ import MyEmployeeList from "../pages/dashboard/my-employee-list/MyEmployeeList";
 import MyAsset from "../pages/dashboard/my-asset/MyAsset";
 import MyTeam from "../pages/dashboard/my-team/MyTeam";
 import ProfilePage from "../pages/dashboard/profile-page/ProfilePage";
+import PackagesPage from "../pages/dashboard/packages-page/PackagesPage";
+import Analytics from "../pages/dashboard/analytics/Analytics";
 
 export const router = createBrowserRouter([
   {
@@ -91,6 +93,14 @@ export const router = createBrowserRouter([
       {
         path:'profile',
         element:<PrivateRoute><ProfilePage></ProfilePage></PrivateRoute>
+      },
+      {
+        path:'packages',
+        element:<HrRoute><PackagesPage></PackagesPage></HrRoute>
+      },
+      {
+        path:'analytics',
+        element:<HrRoute><Analytics></Analytics></HrRoute>
       }
     ]
   }

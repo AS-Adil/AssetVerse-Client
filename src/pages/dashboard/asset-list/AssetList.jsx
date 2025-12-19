@@ -6,6 +6,7 @@ import Loading from "../../../component/loading/Loading";
 import { Search, Pencil, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const AssetList = () => {
   const axiosSecure = useAxiosSecure();
@@ -14,21 +15,24 @@ const AssetList = () => {
   const [editingAsset, setEditingAsset] = useState(null);
   const [editImage, setEditImage] = useState(null);
 
-  const {
-    data: assets = [],
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["assets", searchText],
+  const [page, setPage] = useState(1);
+  const limit = 5;
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["assets", searchText, page],
     queryFn: async () => {
       const res = await axiosSecure.get(
-        `/assets?email=${user.email}&searchText=${searchText}`
+        `/assets?email=${user.email}&searchText=${searchText}&page=${page}&limit=${limit}`
       );
       return res.data;
     },
+    keepPreviousData: true,
   });
 
-  //   console.log("assets=============0", assets);
+  const assets = data?.assets || [];
+  const totalPages = data?.totalPages || 1;
+
+  // console.log(data);
 
   const handleDelete = (asset) => {
     Swal.fire({
@@ -77,34 +81,30 @@ const AssetList = () => {
     }
 
     const updatedInfo = {
-        productName: editingAsset.productName,
+      productName: editingAsset.productName,
       productType: editingAsset.productType,
       availableQuantity: editingAsset.availableQuantity,
       productImage: imageUrl,
-    }
-     axiosSecure.patch(`/assets/${id}`, updatedInfo)
-     .then(res =>{
-      if(res.data.modifiedCount ){
-                 Swal.fire({
-                title: "Updated!",
-                icon: "success",
-              });
-              setEditingAsset(null);
-              setEditImage(null);
-              refetch();
-      }
-     })
-     .catch(()=>{
-               Swal.fire({
-                title: "Failded to Update !",
-                icon: "success",
-              });
-
-     })
-
-    
-
-
+    };
+    axiosSecure
+      .patch(`/assets/${id}`, updatedInfo)
+      .then((res) => {
+        if (res.data.modifiedCount) {
+          Swal.fire({
+            title: "Updated!",
+            icon: "success",
+          });
+          setEditingAsset(null);
+          setEditImage(null);
+          refetch();
+        }
+      })
+      .catch(() => {
+        Swal.fire({
+          title: "Failded to Update !",
+          icon: "success",
+        });
+      });
 
     // Refetch asset list
   };
@@ -126,13 +126,15 @@ const AssetList = () => {
         <div className="w-full md:w-80">
           <label className="input input-bordered flex items-center gap-2 bg-base-100">
             <Search size={16} className="text-neutral" />
+
             <input
               type="search"
               placeholder="Search assets..."
-              className="grow"
               value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              autoFocus
+              onChange={(e) => {
+                setSearchText(e.target.value);
+                setPage(1);
+              }}
             />
           </label>
         </div>
@@ -158,6 +160,7 @@ const AssetList = () => {
               {assets.map((asset, index) => (
                 <tr key={asset._id} className="text-center">
                   <td>{index + 1}</td>
+                  <td>{(page - 1) * limit + index + 1}</td>
 
                   <td>
                     <div className="flex justify-center">
@@ -192,7 +195,6 @@ const AssetList = () => {
                     {new Date(asset.dateAdded).toLocaleDateString("en-GB")}
                   </td>
 
-       
                   <td>
                     <div className="flex justify-center gap-2">
                       <button
@@ -239,6 +241,43 @@ const AssetList = () => {
         </div>
       </div>
 
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-6">
+          <div className="join shadow-sm">
+            <button
+              className="join-item btn btn-sm"
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+              aria-label="Previous page"
+            >
+              <ChevronLeft size={18} />
+            </button>
+
+            {[...Array(totalPages).keys()].map((num) => (
+              <button
+                key={num}
+                className={`join-item btn btn-sm ${
+                  page === num + 1 ? "btn-primary" : "btn-ghost"
+                }`}
+                onClick={() => setPage(num + 1)}
+              >
+                {num + 1}
+              </button>
+            ))}
+
+            <button
+              className="join-item btn btn-sm"
+              disabled={page === totalPages}
+              onClick={() => setPage(page + 1)}
+              aria-label="Next page"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------dialog------------------- */}
       {editingAsset && (
         <dialog open className="modal">
           <div className="modal-box">
@@ -309,7 +348,9 @@ const AssetList = () => {
 
               <div>
                 <label className="label">
-                  <span className="label-text font-medium">Available Quantity</span>
+                  <span className="label-text font-medium">
+                    Available Quantity
+                  </span>
                 </label>
                 <input
                   type="number"

@@ -10,7 +10,9 @@ import {
   Users2,
   Send,
   User,
-  Home
+  Home,
+  Package,
+  BarChart3 
 } from "lucide-react";
 import useRole from "../../hooks/useRole";
 import { Toaster } from "react-hot-toast";
@@ -134,6 +136,24 @@ const DashboardLayout = () => {
                       to="/dashboard/my-employee-list"
                       label="My Employee List"
                       icon={Users}
+                    />
+                  </li>
+
+
+                  <li>
+                    <SidebarItem
+                      to="/dashboard/analytics"
+                      label="Analytics"
+                      icon={BarChart3 }
+                    />
+                  </li>
+                  <li>
+
+
+                    <SidebarItem
+                      to="/dashboard/packages"
+                      label="Upgrade Package"
+                      icon={Package}
                     />
                   </li>
 

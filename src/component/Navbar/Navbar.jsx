@@ -14,6 +14,8 @@ import {
   Send,
   User,
   LogOut,
+  Package,
+  BarChart3 
 } from "lucide-react";
 
 
@@ -110,7 +112,7 @@ const Navbar = () => {
           <div className="dropdown dropdown-end ">
             <div tabIndex={0} role="button" className="m-1">
               <img
-                className="rounded-full w-9 h-9"
+                className="rounded-full w-9 h-9 cursor-pointer"
                 src={user?.photoURL}
                 alt=""
               />
@@ -171,6 +173,16 @@ const Navbar = () => {
                       to="/dashboard/my-employee-list"
                       label="Employee List"
                       icon={Users}
+                    />
+                    <NavItem
+                      to="/dashboard/analytics"
+                      label="Analytics"
+                      icon={BarChart3 }
+                    />
+                    <NavItem
+                      to="/dashboard/packages"
+                      label="Upgrade Package"
+                      icon={Package}
                     />
                     <NavItem
                       to="/dashboard/profile"
