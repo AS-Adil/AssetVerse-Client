@@ -153,7 +153,7 @@ const Navbar = () => {
                 {role === "hr" && (
                   <>
                     <NavItem
-                      to="/dashboard"
+                      to="/dashboard/asset-list"
                       label="Asset List"
                       icon={Boxes}
                     />

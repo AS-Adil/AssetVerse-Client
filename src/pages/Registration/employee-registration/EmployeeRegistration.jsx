@@ -1,9 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
+import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 
 const EmployeeRegistration = () => {
   const { registerUser, updateUserProfile } = useAuth();
@@ -37,7 +38,7 @@ const EmployeeRegistration = () => {
         }`;
 
         axios.post(image_Api_url, formData).then((res) => {
-          console.log("-------after image upload--------", res);
+          // console.log("-------after image upload--------", res);
           const photoURL = res.data.data.url;
 
           const userInfo = {
