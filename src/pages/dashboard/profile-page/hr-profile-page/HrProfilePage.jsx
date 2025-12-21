@@ -52,7 +52,7 @@ const HrProfilePage = () => {
         dateOfBirth: data.dateOfBirth,
       };
 
-      await axiosSecure.patch(`/users/${user.email}`, updatedInfo);
+      await axiosSecure.patch(`/update-hr-profile/${user.email}`, updatedInfo);
       //profile update on firebase
       const userProfile = {
         displayName: data.companyName,

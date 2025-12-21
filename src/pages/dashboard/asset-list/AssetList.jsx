@@ -16,7 +16,7 @@ const AssetList = () => {
   const [editImage, setEditImage] = useState(null);
 
   const [page, setPage] = useState(1);
-  const limit = 5;
+  const limit = 10;
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["assets", searchText, page],
@@ -102,7 +102,7 @@ const AssetList = () => {
       .catch(() => {
         Swal.fire({
           title: "Failded to Update !",
-          icon: "success",
+          icon: "error",
         });
       });
 
@@ -128,6 +128,7 @@ const AssetList = () => {
             <Search size={16} className="text-neutral" />
 
             <input
+            autoFocus
               type="search"
               placeholder="Search assets..."
               value={searchText}
@@ -159,7 +160,6 @@ const AssetList = () => {
             <tbody>
               {assets.map((asset, index) => (
                 <tr key={asset._id} className="text-center">
-                  <td>{index + 1}</td>
                   <td>{(page - 1) * limit + index + 1}</td>
 
                   <td>

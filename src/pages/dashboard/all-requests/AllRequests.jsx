@@ -31,10 +31,22 @@ const AllRequests = () => {
     },
   });
 
-  if (isLoading) return <Loading />;
+  // const {
+  //   data: userInfo,
+  //   isLoading: userLoading,
+  //   refetch: userRefetch,
+  // } = useQuery({
+  //   queryKey: ["user-info", user?.email],
+  //   enabled: !!user?.email,
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get(`/users?email=${user.email}`);
+  //     return res.data;
+  //   },
+  // });
+
+  if (isLoading ) return <Loading />;
 
   const handleApprove = (request) => {
-    // console.log("Approve request:", request);
 
     Swal.fire({
       title: "Approve Request ?",
@@ -60,7 +72,11 @@ const AllRequests = () => {
           refetch();
         } catch (error) {
           console.log(error);
-          Swal.fire("Error", "Failed to approve request", "error");
+          Swal.fire(
+            "Error",
+            `${error?.response?.data?.message || "Failed to approve request"}`,
+            "error"
+          );
         }
       }
     });
@@ -161,64 +177,49 @@ const AllRequests = () => {
                       </span>
                     </td>
 
+                    <td>
+                      <div className="flex justify-center gap-2">
+                        {req.requestStatus === "pending" && (
+                          <>
+                            <button
+                              className="btn btn-xs btn-success flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 hover:scale-105 transition-all duration-200"
+                              onClick={() => handleApprove(req)}
+                              title="Approve Request"
+                            >
+                              <Check size={16} /> Approve
+                            </button>
 
-                    
+                            <button
+                              className="btn btn-xs btn-error flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 px-4 hover:scale-105 transition-all duration-200"
+                              onClick={() => handleReject(req)}
+                              title="Reject Request"
+                            >
+                              <X size={16} /> Reject
+                            </button>
+                          </>
+                        )}
 
-<td>
-  <div className="flex justify-center gap-2">
-    {req.requestStatus === "pending" && (
-      <>
-        <button
-          className="btn btn-xs btn-success flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 hover:scale-105 transition-all duration-200"
-          onClick={() => handleApprove(req)}
-          title="Approve Request"
-        >
-          <Check size={16} /> Approve
-        </button>
+                        {req.requestStatus === "approved" && (
+                          <button
+                            className="btn btn-xs flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 bg-green-700 cursor-default"
+                            title="Request Approved"
+                            disabled
+                          >
+                            <CheckCheck size={16} /> Approved
+                          </button>
+                        )}
 
-        <button
-          className="btn btn-xs btn-error flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 px-4 hover:scale-105 transition-all duration-200"
-          onClick={() => handleReject(req)}
-          title="Reject Request"
-        >
-          <X size={16} /> Reject
-        </button>
-      </>
-    )}
-
-    {req.requestStatus === "approved" && (
-      <button
-        className="btn btn-xs flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 bg-green-700 cursor-default"
-        title="Request Approved"
-        disabled
-      >
-        <CheckCheck size={16} /> Approved
-      </button>
-    )}
-
-    {req.requestStatus === "rejected" && (
-      <button
-        className="btn btn-xs flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 bg-red-600 cursor-default"
-        title="Request Rejected"
-        disabled
-      >
-        <CircleX size={16} /> Rejected
-      </button>
-    )}
-  </div>
-</td>
-
-
-
-
-
-
-
-
-
-
-
-
+                        {req.requestStatus === "rejected" && (
+                          <button
+                            className="btn btn-xs flex items-center gap-1 font-bold text-gray-100 text-center py-3.5 bg-red-600 cursor-default"
+                            title="Request Rejected"
+                            disabled
+                          >
+                            <CircleX size={16} /> Rejected
+                          </button>
+                        )}
+                      </div>
+                    </td>
                   </tr>
                 ))
               ) : (

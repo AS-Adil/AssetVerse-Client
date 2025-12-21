@@ -53,7 +53,7 @@ const HrRegistration = () => {
             role: "hr",
             packageLimit: 5,
             currentEmployees: 0,
-            subscription: "basic",
+            subscription: "Basic",
             createdAt:new Date().toLocaleDateString()
           };
 

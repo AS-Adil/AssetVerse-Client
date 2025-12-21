@@ -15,10 +15,13 @@ const RequestAsset = () => {
   const { data: assets = [], isLoading } = useQuery({
     queryKey: ["all-assets"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/assets");
+      const res = await axiosSecure.get("/assets-all");
       return res.data;
     },
   });
+
+
+  
 
   const handleRequestSubmit = async () => {
     if (!note.trim()) {

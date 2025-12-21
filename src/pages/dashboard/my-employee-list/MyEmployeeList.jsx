@@ -22,7 +22,17 @@ const MyEmployeeList = () => {
     },
   });
 
-  if (isLoading) return <Loading />;
+    const { data: userInfo, isLoading: userLoading , refetch:userRefetch} = useQuery({
+      queryKey: ["user-info", user?.email],
+      enabled: !!user?.email,
+      queryFn: async () => {
+        // const res = await axiosSecure.get(`/users?email=company_b@gmail.com`);
+        const res = await axiosSecure.get(`/users?email=${user.email}`);
+        return res.data;
+      }
+    });
+
+  if (isLoading || userLoading) return <Loading />;
 
   const handleRmove = (emp) => {
     Swal.fire({
@@ -46,6 +56,7 @@ const MyEmployeeList = () => {
             icon: "success",
           });
           refetch();
+          userRefetch()
         } catch (err) {
           console.log(err);
           Swal.fire("Error", "Failed to remove employee", "error");
@@ -62,9 +73,14 @@ const MyEmployeeList = () => {
       <div className="mb-6 flex flex-col md:flex-row md:justify-between md:items-center">
         <div>
           <h1 className="text-3xl font-bold text-secondary">My Employees</h1>
-          <p className="text-neutral mt-1">
-            Employees affiliated with your company
-          </p>
+<p className="text-sm text-neutral">
+  Employee count:{" "}
+  <span className="font-semibold text-secondary">
+    {userInfo.currentEmployees}/{userInfo.packageLimit}
+  </span>{" "}
+  employees used
+</p>
+
         </div>
 
 
@@ -82,6 +98,7 @@ const MyEmployeeList = () => {
                 <th>Email</th>
                 <th>Join Date</th>
                 <th>Assets</th>
+                <th>Assign Asset</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -128,6 +145,10 @@ const MyEmployeeList = () => {
                       <span className="badge badge-info badge-outline px-3">
                         {emp.assetCount}
                       </span>
+                    </td>
+
+                    <td>
+                      <button className="btn btn-primary">Assign</button>
                     </td>
 
                     {/* Action */}

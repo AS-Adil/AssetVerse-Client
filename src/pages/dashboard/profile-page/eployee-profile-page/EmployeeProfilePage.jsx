@@ -59,7 +59,7 @@ const EmployeeProfilePage = () => {
         photoURL,
       };
 
-      await axiosSecure.patch(`/users/${user.email}`, updatedInfo);  
+      await axiosSecure.patch(`/update-employee-profile/${user.email}`, updatedInfo);  
       
       //profile update on firebase
     const userProfile = {

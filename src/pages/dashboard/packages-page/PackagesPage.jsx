@@ -5,12 +5,10 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import Loading from "../../../component/loading/Loading";
 
-
 const PackagesPage = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
-  
   const { data: packages = [], isLoading } = useQuery({
     queryKey: ["packages"],
     queryFn: async () => {
@@ -19,8 +17,41 @@ const PackagesPage = () => {
     },
   });
 
+  const {
+    data: userInfo,
+    isLoading: userLoading,
+    refetch: userRefetch,
+  } = useQuery({
+    queryKey: ["user-info", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users?email=${user.email}`);
+      return res.data;
+    },
+  });
+
   // current package from user
-  const currentPackage = user?.subscription || "Basic";
+  const currentPackage = userInfo?.subscription || "Basic";
+  console.log(currentPackage);
+
+   const handlePayment = async (pkg) => {
+    console.log(pkg);
+
+    const paymentInfo = {
+      hrEmail : user?.email,
+      packageName:pkg.name,
+      employeeLimit:pkg.employeeLimit,
+      amount : pkg.price,
+      
+    };
+    console.log(paymentInfo);
+
+    const res = await axiosSecure.post(
+      "/payment-checkout-session",
+      paymentInfo
+    );
+    window.location.assign(res.data.url);
+  };
 
   if (isLoading) return <Loading />;
 
@@ -90,22 +121,18 @@ const PackagesPage = () => {
                 </ul>
 
                 {/* Button */}
-<button
-  disabled={isCurrent}
-  className={`btn mt-6 w-full
-    ${
-      isCurrent
-        ? "btn-disabled bg-base-300 text-neutral"
-        : "btn-primary"
-    }`}
->
-  {isCurrent
-    ? "Current Plan"
-    : pkg.price === 0
-    ? "Free"
-    : "Upgrade"}
-</button>
-
+                <button
+                  disabled={isCurrent}
+                  onClick={()=> handlePayment(pkg)}
+                  className={`btn mt-6 w-full
+    ${isCurrent ? "btn-disabled bg-base-300 text-neutral" : "btn-primary"}`}
+                >
+                  {isCurrent
+                    ? "Current Plan"
+                    : pkg.price === 0
+                    ? "Free"
+                    : "Upgrade"}
+                </button>
               </div>
             );
           })}

@@ -14,9 +14,7 @@ const MyAssets = () => {
     queryKey: ["my-assets", user?.email, search, type],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(
-        `/my-asset?email=${user.email}&search=${search}&type=${type}`
-      );
+      const res = await axiosSecure.get(`/my-asset?email=${user.email}&search=${search}&type=${type}` );
       return res.data;
     },
   });
