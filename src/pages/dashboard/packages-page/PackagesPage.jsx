@@ -31,10 +31,10 @@ const PackagesPage = () => {
 
   // current package from user
   const currentPackage = userInfo?.subscription || "Basic";
-  console.log(currentPackage);
+  // console.log(currentPackage);
 
    const handlePayment = async (pkg) => {
-    console.log(pkg);
+    // console.log(pkg);
 
     const paymentInfo = {
       hrEmail : user?.email,
