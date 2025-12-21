@@ -23,6 +23,8 @@ const MyTeam = () => {
     },
   });
 
+  
+
   const { data: team = [], isLoading: teamLoading } = useQuery({
     queryKey: ["company-team", selectedCompany],
     enabled: !!selectedCompany && !!user?.email,

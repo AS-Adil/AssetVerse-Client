@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
@@ -10,8 +10,11 @@ const MyEmployeeList = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+
   const {
-    data: employees =[],
+    data: employees = [],
     isLoading,
     refetch,
   } = useQuery({
@@ -22,17 +25,27 @@ const MyEmployeeList = () => {
     },
   });
 
-    const { data: userInfo, isLoading: userLoading , refetch:userRefetch} = useQuery({
-      queryKey: ["user-info", user?.email],
-      enabled: !!user?.email,
-      queryFn: async () => {
-        // const res = await axiosSecure.get(`/users?email=company_b@gmail.com`);
-        const res = await axiosSecure.get(`/users?email=${user.email}`);
-        return res.data;
-      }
-    });
+  const {
+    data: userInfo,
+    isLoading: userLoading,
+    refetch: userRefetch,
+  } = useQuery({
+    queryKey: ["user-info", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users?email=${user.email}`);
+      return res.data;
+    },
+  });
 
-  if (isLoading || userLoading) return <Loading />;
+  const { data: assetsData = {}, isLoading: assetLoading } = useQuery({
+    queryKey: ["my-assets", user.email],
+    enabled: showAssignModal,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/assets-all?email=${user.email}`);
+      return res.data;
+    },
+  });
 
   const handleRmove = (emp) => {
     Swal.fire({
@@ -56,7 +69,7 @@ const MyEmployeeList = () => {
             icon: "success",
           });
           refetch();
-          userRefetch()
+          userRefetch();
         } catch (err) {
           console.log(err);
           Swal.fire("Error", "Failed to remove employee", "error");
@@ -64,6 +77,32 @@ const MyEmployeeList = () => {
       }
     });
   };
+
+  const handleAssignDirect = async (asset, employee) => {
+    console.log("asset------------------", asset);
+    console.log("employee------------------", employee);
+
+    try {
+      await axiosSecure.post("/assign-directly", {
+        assetId: asset._id,
+        employeeEmail: employee.employeeEmail,
+        employeeName: employee.employeeName,
+        hrEmail: user.email,
+        companyName: employee.companyName,
+      });
+
+      Swal.fire("Success", "Asset assigned successfully", "success");
+
+      setShowAssignModal(false);
+      setSelectedEmployee(null);
+      refetch(); // employee list
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "Failed to assign asset", "error");
+    }
+  };
+
+  if (isLoading || userLoading) return <Loading />;
 
   // console.log(employees);
 
@@ -73,17 +112,14 @@ const MyEmployeeList = () => {
       <div className="mb-6 flex flex-col md:flex-row md:justify-between md:items-center">
         <div>
           <h1 className="text-3xl font-bold text-secondary">My Employees</h1>
-<p className="text-sm text-neutral">
-  Employee count:{" "}
-  <span className="font-semibold text-secondary">
-    {userInfo.currentEmployees}/{userInfo.packageLimit}
-  </span>{" "}
-  employees used
-</p>
-
+          <p className="text-sm text-neutral">
+            Employee count:{" "}
+            <span className="font-semibold text-secondary">
+              {userInfo.currentEmployees}/{userInfo.packageLimit}
+            </span>{" "}
+            employees used
+          </p>
         </div>
-
-
       </div>
 
       {/* Table */}
@@ -148,7 +184,15 @@ const MyEmployeeList = () => {
                     </td>
 
                     <td>
-                      <button className="btn btn-primary">Assign</button>
+                      <button
+                        className="btn btn-xs btn-primary text-white hover:scale-105 transition-all"
+                        onClick={() => {
+                          setSelectedEmployee(emp);
+                          setShowAssignModal(true);
+                        }}
+                      >
+                        Assign Asset
+                      </button>
                     </td>
 
                     {/* Action */}
@@ -181,6 +225,135 @@ const MyEmployeeList = () => {
           </table>
         </div>
       </div>
+      {/* -----------------------modal start-------------------- */}
+      {showAssignModal && selectedEmployee && (
+        <dialog open className="modal modal-middle">
+          <div className="modal-box max-w-5xl bg-base-100">
+            {/* ---------- Header ---------- */}
+            <div className="flex flex-col items-center text-center gap-2 mb-6">
+              <div className="avatar">
+                <div className="w-16 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                  <img
+                    src={selectedEmployee.profileImage}
+                    alt={selectedEmployee.employeeName}
+                  />
+                </div>
+              </div>
+
+              <h3 className="text-xl font-bold text-secondary">Assign Asset</h3>
+
+              <p className="text-sm text-neutral">
+                to{" "}
+                <span className="font-semibold">
+                  {selectedEmployee.employeeName}
+                </span>
+              </p>
+            </div>
+
+            {/* ---------- Body ---------- */}
+            {assetLoading ? (
+              <Loading />
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="table w-full text-center">
+                  <thead className="bg-base-200 text-secondary">
+                    <tr>
+                      <th className="text-center">Image</th>
+                      <th className="text-center">Asset</th>
+                      <th className="text-center">Type</th>
+                      <th className="text-center">Available</th>
+                      <th className="text-center">Action</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {assetsData
+                      .filter((a) => a.availableQuantity > 0)
+                      .map((asset) => (
+                        <tr
+                          key={asset._id}
+                          className="hover:bg-base-200/50 transition"
+                        >
+                          {/* Asset info */}
+
+                          <td>
+                            {" "}
+                            <div className="avatar">
+                              <div className="w-10 rounded-lg bg-base-200">
+                                <img
+                                  src={asset.productImage}
+                                  alt={asset.productName}
+                                  className="object-cover"
+                                />
+                              </div>
+                            </div>
+                          </td>
+
+                          <td>
+                            <div className="flex items-center justify-center gap-3">
+                              <p className="font-medium text-secondary">
+                                {asset.productName}
+                              </p>
+                            </div>
+                          </td>
+
+                          {/* Type */}
+                          <td>
+                            <span
+                              className={`badge badge-outline px-3
+                          ${
+                            asset.productType === "Returnable"
+                              ? "badge-info"
+                              : "badge-warning"
+                          }
+                        `}
+                            >
+                              {asset.productType}
+                            </span>
+                          </td>
+
+                          {/* Available */}
+                          <td>
+                            <span className="badge badge-success px-3">
+                              {asset.availableQuantity}
+                            </span>
+                          </td>
+
+                          {/* Action */}
+                          <td>
+                            <button
+                              className="btn btn-xs btn-primary hover:scale-105 transition"
+                              onClick={() =>
+                                handleAssignDirect(asset, selectedEmployee)
+                              }
+                            >
+                              Assign
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* ---------- Footer ---------- */}
+            <div className="modal-action justify-center">
+              <button
+                className="btn btn-ghost bg-red-500 text-white"
+                onClick={() => {
+                  setShowAssignModal(false);
+                  setSelectedEmployee(null);
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
+
+      {/* -----------------------modal end-------------------- */}
     </div>
   );
 };
