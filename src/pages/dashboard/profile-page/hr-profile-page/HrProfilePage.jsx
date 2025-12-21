@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -6,10 +6,13 @@ import axios from "axios";
 import useAuth from "../../../../hooks/useAuth";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Loading from "../../../../component/loading/Loading";
+import LoadingButton from "../../../../component/loading-button/LoadingButton";
 
 const HrProfilePage = () => {
   const { user, updateUserProfile } = useAuth();
   const axiosSecure = useAxiosSecure();
+    const [loadingbtn, setLoadingBtn] = useState(false);
+  
 
   const {
     register,
@@ -32,6 +35,7 @@ const HrProfilePage = () => {
   });
 
   const onSubmit = async (data) => {
+    setLoadingBtn(true)
     try {
       let companyLogo = hrInfo.companyLogo;
 
@@ -65,6 +69,9 @@ const HrProfilePage = () => {
     } catch (err) {
       console.error(err);
       toast.error("Failed to update HR profile");
+    }
+    finally{
+      setLoadingBtn(false)
     }
   };
 
@@ -171,9 +178,11 @@ const HrProfilePage = () => {
             </div>
           </div>
 
-          <button className="btn btn-primary w-full mt-4">
-            Update Profile
-          </button>
+          <LoadingButton
+            loading={loadingbtn}
+            loadingText="Updating"
+            text="Update Profile"
+          />
         </form>
       </div>
     </div>

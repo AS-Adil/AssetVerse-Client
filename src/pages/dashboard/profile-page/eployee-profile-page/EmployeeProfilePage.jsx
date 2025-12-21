@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -6,26 +6,32 @@ import axios from "axios";
 import useAuth from "../../../../hooks/useAuth";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Loading from "../../../../component/loading/Loading";
+import LoadingButton from "../../../../component/loading-button/LoadingButton";
 
 const EmployeeProfilePage = () => {
   const { user, updateUserProfile } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const [loadingbtn, setLoadingBtn] = useState(false);
 
   const {
     register,
     handleSubmit,
-    
+
     formState: { errors },
   } = useForm();
 
   // Fetch current user info
-  const { data: userInfo, isLoading: userLoading , refetch} = useQuery({
+  const {
+    data: userInfo,
+    isLoading: userLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["user-info", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await axiosSecure.get(`/users?email=${user.email}`);
       return res.data;
-    }
+    },
   });
 
   // Fetch affiliations
@@ -39,6 +45,7 @@ const EmployeeProfilePage = () => {
   });
 
   const onSubmit = async (data) => {
+    setLoadingBtn(true);
     try {
       let photoURL = userInfo.photoURL;
 
@@ -48,9 +55,8 @@ const EmployeeProfilePage = () => {
         const image_Api_url = `https://api.imgbb.com/1/upload?key=${
           import.meta.env.VITE_image_host_key
         }`;
-          const res = await axios.post(image_Api_url, formData);
-          photoURL = res.data.data.url; 
-        
+        const res = await axios.post(image_Api_url, formData);
+        photoURL = res.data.data.url;
       }
 
       const updatedInfo = {
@@ -59,20 +65,25 @@ const EmployeeProfilePage = () => {
         photoURL,
       };
 
-      await axiosSecure.patch(`/update-employee-profile/${user.email}`, updatedInfo);  
-      
+      await axiosSecure.patch(
+        `/update-employee-profile/${user.email}`,
+        updatedInfo
+      );
+
       //profile update on firebase
-    const userProfile = {
-            displayName: data.name,
-            photoURL: photoURL,
-          };
-      await updateUserProfile(userProfile)   
+      const userProfile = {
+        displayName: data.name,
+        photoURL: photoURL,
+      };
+      await updateUserProfile(userProfile);
 
       toast.success("Profile updated successfully!");
-      refetch()
+      refetch();
     } catch (err) {
       console.error(err);
       toast.error("Failed to update profile");
+    } finally {
+      setLoadingBtn(false);
     }
   };
 
@@ -81,7 +92,9 @@ const EmployeeProfilePage = () => {
   return (
     <div className="min-h-screen bg-base-100 py-12 px-4">
       <div className="max-w-3xl mx-auto bg-base-200 rounded-xl shadow p-8 space-y-8">
-        <h1 className="text-3xl font-semibold text-center text-secondary">My Profile</h1>
+        <h1 className="text-3xl font-semibold text-center text-secondary">
+          My Profile
+        </h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Profile Picture */}
@@ -93,7 +106,6 @@ const EmployeeProfilePage = () => {
             />
           </div>
 
-
           {/* Name */}
           <div>
             <label className="label">Full Name</label>
@@ -103,7 +115,9 @@ const EmployeeProfilePage = () => {
               {...register("name", { required: true })}
               defaultValue={userInfo.displayName}
             />
-            {errors.name && <p className="text-error text-sm mt-1">Name is required</p>}
+            {errors.name && (
+              <p className="text-error text-sm mt-1">Name is required</p>
+            )}
           </div>
 
           {/* Email (read-only) */}
@@ -117,7 +131,7 @@ const EmployeeProfilePage = () => {
             />
           </div>
 
-           <div>
+          <div>
             <label className="label">Change Profile Picture</label>
             <input
               type="file"
@@ -137,18 +151,28 @@ const EmployeeProfilePage = () => {
               defaultValue={userInfo.dateOfBirth}
             />
             {errors.dateOfBirth && (
-              <p className="text-error text-sm mt-1">Date of Birth is required</p>
+              <p className="text-error text-sm mt-1">
+                Date of Birth is required
+              </p>
             )}
           </div>
 
-          <button className="btn btn-primary w-full mt-4">Update Profile</button>
+          <LoadingButton
+            loading={loadingbtn}
+            loadingText="Updating"
+            text="Update Profile"
+          />
         </form>
 
         {/* Affiliations */}
         <div className="mt-6">
-          <h2 className="text-lg font-semibold text-secondary mb-3">Current Company Affiliations</h2>
+          <h2 className="text-lg font-semibold text-secondary mb-3">
+            Current Company Affiliations
+          </h2>
           {affiliations.length === 0 ? (
-            <p className="text-neutral text-sm">You are not affiliated with any company yet.</p>
+            <p className="text-neutral text-sm">
+              You are not affiliated with any company yet.
+            </p>
           ) : (
             <ul className="space-y-2">
               {affiliations.map((a) => (
@@ -162,7 +186,9 @@ const EmployeeProfilePage = () => {
                       alt={a.companyName}
                       className="w-10 h-10 rounded-full object-cover"
                     />
-                    <span className="font-medium text-secondary">{a.companyName}</span>
+                    <span className="font-medium text-secondary">
+                      {a.companyName}
+                    </span>
                   </div>
                 </li>
               ))}

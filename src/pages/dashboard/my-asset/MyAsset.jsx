@@ -69,7 +69,6 @@ const MyAssets = () => {
                   <th className="text-center">Company</th>
                   <th className="text-center">Assigned Date</th>
                   <th className="text-center">Status</th>
-                  <th className="text-center">Action</th>
                 </tr>
               </thead>
 
@@ -92,13 +91,13 @@ const MyAssets = () => {
                       />
                     </td>
 
-                    <td className="text-center font-medium">
+                    <td className="text-center font-medium whitespace-nowrap">
                       {asset.assetName}
                     </td>
 
                     <td className="text-center">
                       <span
-                        className={`badge badge-outline ${
+                        className={`badge badge-outline whitespace-nowrap ${
                           asset.assetType === "Returnable"
                             ? "badge-info"
                             : "badge-warning"
@@ -108,15 +107,15 @@ const MyAssets = () => {
                       </span>
                     </td>
 
-                    <td className="text-center">{asset.companyName}</td>
+                    <td className="text-center whitespace-nowrap">{asset.companyName}</td>
 
-                    <td className="text-center">
+                    <td className="text-center whitespace-nowrap">
                       {new Date(asset.assignmentDate).toLocaleDateString()}
                     </td>
 
                     <td className="text-center">
                       <span
-                        className={`badge ${
+                        className={`badge whitespace-nowrap ${
                           asset.status === "assigned"
                             ? "badge-success"
                             : "badge-warning"
@@ -126,16 +125,7 @@ const MyAssets = () => {
                       </span>
                     </td>
 
-                    <td className="text-center">
-                      {asset.assetType === "Returnable" &&
-                      asset.status === "assigned" ? (
-                        <button className="btn btn-xs btn-accent">
-                          Return
-                        </button>
-                      ) : (
-                        "-"
-                      )}
-                    </td>
+
                   </tr>
                 ))}
               </tbody>

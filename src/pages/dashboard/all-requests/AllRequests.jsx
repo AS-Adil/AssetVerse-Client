@@ -44,10 +44,9 @@ const AllRequests = () => {
   //   },
   // });
 
-  if (isLoading ) return <Loading />;
+  if (isLoading) return <Loading />;
 
   const handleApprove = (request) => {
-
     Swal.fire({
       title: "Approve Request ?",
       text: `Do you want ot set ${request.requesterName} as Approved`,
@@ -143,9 +142,9 @@ const AllRequests = () => {
                 requests.map((req, index) => (
                   <tr key={req._id} className="text-center">
                     <td>{index + 1}</td>
-                    <td>{req.requesterName}</td>
-                    <td>{req.assetName}</td>
-                    <td>{new Date(req.requestDate).toLocaleDateString()}</td>
+                    <td className="whitespace-nowrap">{req.requesterName}</td>
+                    <td className="whitespace-nowrap">{req.assetName}</td>
+                    <td className="whitespace-nowrap">{new Date(req.requestDate).toLocaleDateString()}</td>
 
                     <td>
                       <span

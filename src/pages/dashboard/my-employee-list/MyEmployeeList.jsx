@@ -158,10 +158,10 @@ const MyEmployeeList = () => {
                     <td className="flex items-center justify-center gap-3">
                       <div>
                         <div className="text-left">
-                          <p className="font-semibold text-secondary">
+                          <p className="font-semibold whitespace-nowrap text-secondary">
                             {emp.employeeName}
                           </p>
-                          <p className="text-xs text-neutral">
+                          <p className="text-xs text-neutral whitespace-nowrap">
                             {emp.companyName}
                           </p>
                         </div>
@@ -169,7 +169,7 @@ const MyEmployeeList = () => {
                     </td>
 
                     {/* Email */}
-                    <td className="text-neutral">{emp.employeeEmail}</td>
+                    <td className="text-neutral whitespace-nowrap">{emp.employeeEmail}</td>
 
                     {/* Join Date */}
                     <td className="text-neutral">
@@ -291,7 +291,7 @@ const MyEmployeeList = () => {
 
                           <td>
                             <div className="flex items-center justify-center gap-3">
-                              <p className="font-medium text-secondary">
+                              <p className="font-medium text-secondary whitespace-nowrap">
                                 {asset.productName}
                               </p>
                             </div>
@@ -300,7 +300,7 @@ const MyEmployeeList = () => {
                           {/* Type */}
                           <td>
                             <span
-                              className={`badge badge-outline px-3
+                              className={`badge badge-outline whitespace-nowrap px-3
                           ${
                             asset.productType === "Returnable"
                               ? "badge-info"

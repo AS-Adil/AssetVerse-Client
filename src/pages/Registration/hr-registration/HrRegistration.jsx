@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
+import { Eye, EyeOff } from "lucide-react";
+import toast from "react-hot-toast";
+import LoadingButton from "../../../component/loading-button/LoadingButton";
+
 
 const HrRegistration = () => {
   const { registerUser, updateUserProfile } = useAuth();
   const axiosSecure = useAxiosSecure();
+    const [showPassword, setShowPassword] = useState(false);
+      const [loadingbtn, setLoadingBtn] = useState(false);
+    
+  
 
   const navigate = useNavigate()
 
@@ -20,75 +28,48 @@ const HrRegistration = () => {
 
 
 
-  const handleRegister = (data) => {
-    console.log("HR----------- registration data:", data);
-
+const handleRegister = async (data) => {
+  setLoadingBtn(true);
+  try {
     const imageFile = data.companyLogo[0];
-    console.log("image file--------hr-----", imageFile);
 
-    registerUser(data.email, data.password)
-      .then((result) => {
-        console.log("user created------------------------", result.user);
+    // register Firebase user
+    await registerUser(data.email, data.password);
 
-        // 1.store the image in FormData
-        const formData = new FormData();
-        formData.append("image", imageFile);
+    // upload image to imgbb
+    const formData = new FormData();
+    formData.append("image", imageFile);
+    const image_Api_url = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`;
+    const imgRes = await axios.post(image_Api_url, formData);
+    const photoURL = imgRes.data.data.url;
 
-        // 2. send the photo to store and get the url
-        const image_Api_url = `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_image_host_key
-        }`;
+    // save hr in db
+    await axiosSecure.post("/users", {
+      name: data.name,
+      companyName: data.companyName,
+      companyLogo: photoURL,
+      email: data.email,
+      dateOfBirth: data.dateOfBirth,
+      role: "hr",
+      packageLimit: 5,
+      currentEmployees: 0,
+      subscription: "Basic",
+      createdAt: new Date().toLocaleDateString(),
+    });
 
-        axios.post(image_Api_url, formData).then((res) => {
-          console.log("-------after image upload--------", res);
-          const photoURL = res.data.data.url;
+    // 4. Update Firebase profile
+    await updateUserProfile({ displayName: data.companyName, photoURL });
 
-          const userInfo = {
-            name: data.name,
-            companyName: data.companyName,
-            companyLogo: photoURL,
-            email: data.email,
-            password: data.password,
-            dateOfBirth: data.dateOfBirth,
-            role: "hr",
-            packageLimit: 5,
-            currentEmployees: 0,
-            subscription: "Basic",
-            createdAt:new Date().toLocaleDateString()
-          };
+    toast.success("HR Registered Successfully");
+    navigate("/");
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to Register HR");
+  } finally {
+    setLoadingBtn(false);
+  }
+};
 
-          // create user in database
-          axiosSecure
-            .post("/users", userInfo)
-            .then((res) => {
-              if (res.data.insertedId) {
-                console.log("----------user created in database---------", res);
-              }
-            })
-            .catch((error) => {
-              console.log("------------errorrrr", error);
-            });
-
-          // 3.update the profile to firebase
-          const userProfile = {
-            displayName: data.companyName,
-            photoURL: photoURL,
-          };
-          updateUserProfile(userProfile)
-            .then(() => {
-              console.log("user profle uploaded------------");
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        });
-
-        navigate('/')
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center py-14 px-4">
@@ -191,15 +172,27 @@ const HrRegistration = () => {
             {/* Password */}
             <div>
               <label className="label">Password</label>
-              <input
-                type="password"
-                className="input input-bordered w-full"
-                {...register("password", {
-                  required: true,
-                  pattern: /^.{6,}$/, // minimum 6 characters
-                })}
-                placeholder="••••••••"
-              />
+
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="input input-bordered w-full pr-12"
+                  {...register("password", {
+                    required: true,
+                    pattern: /^.{6,}$/,
+                  })}
+                  placeholder="Password"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 z-10 top-1/2 -translate-y-1/2 text-neutral hover:text-secondary"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+
               {errors.password && (
                 <p className="text-error text-sm mt-1">
                   Minimum 6 characters required
@@ -207,9 +200,11 @@ const HrRegistration = () => {
               )}
             </div>
 
-            <button className="btn btn-primary w-full mt-6">
-              Create Account
-            </button>
+            <LoadingButton
+              loading={loadingbtn}
+              loadingText="Creating"
+              text="Create Account"
+            />
           </form>
                     <p className="text-sm text-center text-neutral mt-6">
                       Already have an account?{" "}

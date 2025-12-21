@@ -5,10 +5,13 @@ import { Eye, EyeOff } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
 import Loading from "../../component/loading/Loading";
 import toast from "react-hot-toast";
+import LoadingButton from "../../component/loading-button/LoadingButton";
 
 const Login = () => {
-  const {signInuser, loading} = useAuth()
+  const {signInuser} = useAuth()
   const [showPassword, setShowPassword] = useState(false);
+    const [loadingbtn, setLoadingBtn] = useState(false);
+  
 
   const navigate = useNavigate()
 
@@ -20,6 +23,8 @@ const Login = () => {
 
   const handleLogin = (data) => {
     // console.log("Login data:", data);
+
+    setLoadingBtn(true)
     signInuser(data.email, data.password)
     .then(res =>{
       // console.log(res);
@@ -28,7 +33,11 @@ const Login = () => {
       navigate('/')
     })
     .catch(err =>{
-      console.log(err);
+      // console.log(err);
+      toast.error(err.message)
+    })
+    .finally(()=>{
+      setLoadingBtn(false)
     })
 
   };
@@ -99,9 +108,11 @@ const Login = () => {
               )}
             </div>
 
-            <button className="btn btn-primary w-full mt-6">
-              Login
-            </button>
+            <LoadingButton
+              loading={loadingbtn}
+              loadingText="Logging in"
+              text="Login"
+            />
           </form>
 
           <p className="text-sm text-center text-neutral mt-6">

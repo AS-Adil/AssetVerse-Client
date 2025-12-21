@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import axios from "axios";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-
+import { Eye, EyeOff } from "lucide-react";
+import toast from "react-hot-toast";
+import LoadingButton from "../../../component/loading-button/LoadingButton";
 
 const EmployeeRegistration = () => {
   const { registerUser, updateUserProfile } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const [showPassword, setShowPassword] = useState(false);
+  const [loadingbtn, setLoadingBtn] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const {
     register,
@@ -18,70 +22,44 @@ const EmployeeRegistration = () => {
     formState: { errors },
   } = useForm();
 
-  const handleRegister = (data) => {
-    console.log("Employee registration data:", data);
+  const handleRegister = async (data) => {
+    setLoadingBtn(true);
+    try {
+      const imageFile = data.photo[0];
 
-    const imageFile = data.photo[0];
-    console.log("image file-------------", imageFile);
+      //  create user
+      await registerUser(data.email, data.password);
 
-    registerUser(data.email, data.password)
-      .then((result) => {
-        console.log("user created------------------------", result.user);
+      // upload image
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      const image_Api_url = `https://api.imgbb.com/1/upload?key=${
+        import.meta.env.VITE_image_host_key
+      }`;
+      const imgRes = await axios.post(image_Api_url, formData);
+      const photoURL = imgRes.data.data.url;
 
-        // 1.store the image in FormData
-        const formData = new FormData();
-        formData.append("image", imageFile);
-
-        // 2. send the photo to store and get the url
-        const image_Api_url = `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_image_host_key
-        }`;
-
-        axios.post(image_Api_url, formData).then((res) => {
-          // console.log("-------after image upload--------", res);
-          const photoURL = res.data.data.url;
-
-          const userInfo = {
-            email: data.email,
-            displayName: data.name,
-            photoURL: photoURL,
-            dateOfBirth: data.dateOfBirth,
-            role: "employee",
-            createdAt:new Date().toLocaleDateString()
-
-          };
-
-          // create user in database
-          axiosSecure
-            .post("/users", userInfo)
-            .then((res) => {
-              if (res.data.insertedId) {
-                console.log("----------user created in database---------", res);
-              }
-            })
-            .catch((error) => {
-              console.log("------------errorrrr", error);
-            });
-
-          // 3.update the profile to firebase
-          const userProfile = {
-            displayName: data.name,
-            photoURL: photoURL,
-          };
-          updateUserProfile(userProfile)
-            .then(() => {
-              console.log("user profle uploaded------------");
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        });
-
-        navigate('/')
-      })
-      .catch((err) => {
-        console.log(err);
+      // save user in DB
+      await axiosSecure.post("/users", {
+        email: data.email,
+        displayName: data.name,
+        photoURL,
+        dateOfBirth: data.dateOfBirth,
+        role: "employee",
+        createdAt: new Date().toLocaleDateString(),
       });
+
+      //update Firebase profile
+      await updateUserProfile({ displayName: data.name, photoURL });
+
+      toast.success("Registered Successfully");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to Register");
+    } finally {
+      setLoadingBtn(false);
+    }
   };
 
   return (
@@ -111,7 +89,7 @@ const EmployeeRegistration = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(handleRegister)} className="space-y-4">
+          <form onSubmit={handleSubmit(handleRegister)}  className="space-y-4">
             {/* Full Name */}
             <div>
               <label className="label">Full Name</label>
@@ -153,7 +131,7 @@ const EmployeeRegistration = () => {
                 className="file-input file-input-bordered w-full"
                 {...register("photo", { required: true })}
               />
-              {errors.photoURL && (
+              {errors.photo && (
                 <p className="text-error text-sm mt-1">
                   Profile image is required
                 </p>
@@ -178,15 +156,27 @@ const EmployeeRegistration = () => {
             {/* Password */}
             <div>
               <label className="label">Password</label>
-              <input
-                type="password"
-                className="input input-bordered w-full"
-                {...register("password", {
-                  required: true,
-                  pattern: /^.{6,}$/,
-                })}
-                placeholder="••••••••"
-              />
+
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="input input-bordered w-full pr-12"
+                  {...register("password", {
+                    required: true,
+                    pattern: /^.{6,}$/,
+                  })}
+                  placeholder="Password"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 z-10 top-1/2 -translate-y-1/2 text-neutral hover:text-secondary"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+
               {errors.password && (
                 <p className="text-error text-sm mt-1">
                   Minimum 6 characters required
@@ -194,19 +184,21 @@ const EmployeeRegistration = () => {
               )}
             </div>
 
-            <button className="btn btn-primary w-full mt-6">
-              Create Account
-            </button>
+            <LoadingButton
+              loading={loadingbtn}
+              loadingText="Creating"
+              text="Create Account"
+            />
           </form>
-                              <p className="text-sm text-center text-neutral mt-6">
-                                Already have an account?{" "}
-                                <Link
-                                  to="/login"
-                                  className="text-primary font-semibold hover:underline"
-                                >
-                                 Login
-                                </Link>
-                              </p>
+          <p className="text-sm text-center text-neutral mt-6">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-primary font-semibold hover:underline"
+            >
+              Login
+            </Link>
+          </p>
         </div>
 
         {/* Image Section */}

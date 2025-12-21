@@ -179,7 +179,7 @@ const AssetList = () => {
 
                   <td>
                     <span
-                      className={`badge badge-outline ${
+                      className={`badge badge-outline whitespace-nowrap ${
                         asset.productType === "Returnable"
                           ? "badge-info"
                           : "badge-warning"
