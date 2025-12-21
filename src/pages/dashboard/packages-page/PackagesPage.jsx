@@ -20,7 +20,6 @@ const PackagesPage = () => {
   const {
     data: userInfo,
     isLoading: userLoading,
-    refetch: userRefetch,
   } = useQuery({
     queryKey: ["user-info", user?.email],
     enabled: !!user?.email,
@@ -53,7 +52,7 @@ const PackagesPage = () => {
     window.location.assign(res.data.url);
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading || userLoading) return <Loading />;
 
   return (
     <div className="min-h-screen bg-base-100 py-12 px-4">
@@ -122,16 +121,16 @@ const PackagesPage = () => {
 
                 {/* Button */}
                 <button
-                  disabled={isCurrent}
+                  disabled={isCurrent || pkg.price===0}
                   onClick={()=> handlePayment(pkg)}
-                  className={`btn mt-6 w-full
+                  className={`btn mt-6 w-full ${pkg.price===0 ?"bg-blue-400 text-white" : ""}
     ${isCurrent ? "btn-disabled bg-base-300 text-neutral" : "btn-primary"}`}
                 >
                   {isCurrent
                     ? "Current Plan"
                     : pkg.price === 0
                     ? "Free"
-                    : "Upgrade"}
+                    : "Purchase"}
                 </button>
               </div>
             );

@@ -21,6 +21,8 @@ import MyTeam from "../pages/dashboard/my-team/MyTeam";
 import ProfilePage from "../pages/dashboard/profile-page/ProfilePage";
 import PackagesPage from "../pages/dashboard/packages-page/PackagesPage";
 import Analytics from "../pages/dashboard/analytics/Analytics";
+import PaymentSuccess from "../pages/dashboard/pyment-success/PaymentSuccess";
+import PaymentCancel from "../pages/dashboard/payment-cancel/PaymentCancel";
 
 export const router = createBrowserRouter([
   {
@@ -101,6 +103,14 @@ export const router = createBrowserRouter([
       {
         path:'analytics',
         element:<HrRoute><Analytics></Analytics></HrRoute>
+      },
+      {
+        path:'payment-success',
+        Component:PaymentSuccess
+      },
+      {
+        path:'payment-cancelled',
+        Component:PaymentCancel
       }
     ]
   }
