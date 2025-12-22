@@ -10,12 +10,12 @@ const MyTeam = () => {
 
   const [selectedCompany, setSelectedCompany] = useState("");
 
+  // Fetch user's companies
   const { data: companies = [], isLoading: companiesLoading } = useQuery({
     queryKey: ["my-companies", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await axiosSecure.get(`/my-companies?email=${user.email}`);
-
       if (res.data?.length > 0 && !selectedCompany) {
         setSelectedCompany(res.data[0].companyName);
       }
@@ -23,8 +23,7 @@ const MyTeam = () => {
     },
   });
 
-  
-
+  // fetch team for selectedd company
   const { data: team = [], isLoading: teamLoading } = useQuery({
     queryKey: ["company-team", selectedCompany],
     enabled: !!selectedCompany && !!user?.email,
@@ -36,9 +35,7 @@ const MyTeam = () => {
     },
   });
 
-  if (companiesLoading || teamLoading) {
-    return <Loading />;
-  }
+  if (companiesLoading || teamLoading) return <Loading />;
 
   const currentMonth = new Date().getMonth();
   const birthdaysThisMonth = team.filter((member) => {
@@ -56,94 +53,114 @@ const MyTeam = () => {
           </p>
         </div>
 
-        <div className="flex justify-center">
-          <select
-            className="select select-bordered bg-base-200 w-full max-w-sm text-center"
-            value={selectedCompany}
-            onChange={(e) => setSelectedCompany(e.target.value)}
-          >
-            {companies.map((company) => (
-              <option key={company.companyName} value={company.companyName}>
-                {company.companyName}
-              </option>
-            ))}
-          </select>
-        </div>
+        {/* company Selector */}
+        {companies.length === 0 ? (
+          <div>
+            <p className="text-center text-xl font-semibold text-secondary">No company affiliation</p>
+            <p className="text-center text-sm text-neutral">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-          {team.map((member) => (
-            <div
-              key={member.email}
-              className="w-full max-w-xs bg-base-200 rounded-xl p-6 text-center shadow-sm hover:shadow-md transition"
-            >
-              <div className="flex justify-center mb-4">
-                <img
-                  src={member.photoURL}
-                  alt={member.displayName}
-                  className="w-20 h-20 rounded-full object-cover"
-                />
-              </div>
-
-              <h3 className="text-lg font-semibold text-secondary">
-                {member.displayName}
-              </h3>
-
-              <p className="text-sm text-neutral mt-1 break-all">
-                {member.email}
-              </p>
-
-              <p className="text-xs text-gray-400 mt-3 uppercase tracking-wide">
-                Employee
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Upcoming Birthdays */}
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-base-200 rounded-xl p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-secondary text-center mb-6">
-              🎉 Upcoming Birthdays
-            </h2>
-
-            {birthdaysThisMonth.length === 0 ? (
-              <p className="text-center text-sm text-neutral">
-                No birthdays this month
-              </p>
-            ) : (
-              <ul className="space-y-5">
-                {birthdaysThisMonth.map((member) => (
-                  <li
-                    key={member.email}
-                    className="flex items-center justify-center gap-4"
-                  >
-                    <img
-                      src={member.photoURL}
-                      alt={member.displayName}
-                      className="w-11 h-11 rounded-full object-cover"
-                    />
-
-                    {/* NAME + DATE */}
-                    <div className="text-left">
-                      <h1 className="font-semibold text-4xl text-secondary">
-                        {member.displayName}
-                      </h1>
-                      <p className="text-xs text-neutral">
-                        {new Date(member.dateOfBirth).toLocaleDateString(
-                          "en-US",
-                          {
-                            day: "numeric",
-                            month: "long",
-                          }
-                        )}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
+            You are not connected to any company yet. Once an HR Manager adds
+            you to a company, your team members will appear here.
+            </p>
           </div>
-        </div>
+        ) : (
+          <div className="flex justify-center mb-6">
+            <select
+              className="select select-bordered bg-base-200 w-full max-w-sm text-center"
+              value={selectedCompany}
+              onChange={(e) => setSelectedCompany(e.target.value)}
+            >
+              {companies.map((company) => (
+                <option key={company.companyName} value={company.companyName}>
+                  {company.companyName}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Team members */}
+        {companies.length > 0 && team.length === 0 ? (
+          <p className="text-center text-sm text-neutral">
+            No team members found for <strong>{selectedCompany}</strong> yet.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+            {team.map((member) => (
+              <div
+                key={member.email}
+                className="w-full max-w-xs bg-base-200 rounded-xl p-6 text-center shadow-sm hover:shadow-md transition"
+              >
+                <div className="flex justify-center mb-4">
+                  <img
+                    src={member.photoURL}
+                    alt={member.displayName}
+                    className="w-20 h-20 rounded-full object-cover"
+                  />
+                </div>
+
+                <h3 className="text-lg font-semibold text-secondary">
+                  {member.displayName}
+                </h3>
+
+                <p className="text-sm text-neutral mt-1 break-all">
+                  {member.email}
+                </p>
+
+                <p className="text-xs text-gray-400 mt-3 uppercase tracking-wide">
+                  Employee
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Upcoming birthdays */}
+        {team.length > 0 && (
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-base-200 rounded-xl p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-secondary text-center mb-6">
+                🎉 Upcoming Birthdays
+              </h2>
+
+              {birthdaysThisMonth.length === 0 ? (
+                <p className="text-center text-sm text-neutral">
+                  No birthdays this month
+                </p>
+              ) : (
+                <ul className="space-y-5">
+                  {birthdaysThisMonth.map((member) => (
+                    <li
+                      key={member.email}
+                      className="flex items-center justify-center gap-4"
+                    >
+                      <img
+                        src={member.photoURL}
+                        alt={member.displayName}
+                        className="w-11 h-11 rounded-full object-cover"
+                      />
+
+                      <div className="text-left">
+                        <h1 className="font-semibold text-4xl text-secondary">
+                          {member.displayName}
+                        </h1>
+                        <p className="text-xs text-neutral">
+                          {new Date(member.dateOfBirth).toLocaleDateString(
+                            "en-US",
+                            {
+                              day: "numeric",
+                              month: "long",
+                            }
+                          )}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

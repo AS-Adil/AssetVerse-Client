@@ -55,7 +55,7 @@ const EmployeeRegistration = () => {
       toast.success("Registered Successfully");
       navigate("/");
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       toast.error("Failed to Register");
     } finally {
       setLoadingBtn(false);

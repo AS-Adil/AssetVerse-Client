@@ -71,7 +71,7 @@ const MyEmployeeList = () => {
           refetch();
           userRefetch();
         } catch (err) {
-          console.log(err);
+          // console.log(err);
           Swal.fire("Error", "Failed to remove employee", "error");
         }
       }
@@ -79,8 +79,8 @@ const MyEmployeeList = () => {
   };
 
   const handleAssignDirect = async (asset, employee) => {
-    console.log("asset------------------", asset);
-    console.log("employee------------------", employee);
+    // console.log("asset------------------", asset);
+    // console.log("employee------------------", employee);
 
     try {
       await axiosSecure.post("/assign-directly", {

@@ -4,7 +4,8 @@ import useAuth from "./useAuth";
 import { useNavigate } from "react-router";
 
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:3000/",
+  // baseURL: "http://localhost:3000/",
+  baseURL: "https://assetverse-server-alpha.vercel.app/",
 });
 
 const useAxiosSecure = () => {
@@ -25,7 +26,7 @@ const useAxiosSecure = () => {
         return response;
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
         const statusCode = error.response?.status;
 
         if (statusCode === 401 || statusCode === 403) {

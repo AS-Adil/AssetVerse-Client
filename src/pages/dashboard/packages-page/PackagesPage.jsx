@@ -48,7 +48,7 @@ const PackagesPage = () => {
       employeeLimit: pkg.employeeLimit,
       amount: pkg.price,
     };
-    console.log(paymentInfo);
+    // console.log(paymentInfo);
 
     const res = await axiosSecure.post(
       "/payment-checkout-session",

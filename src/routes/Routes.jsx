@@ -69,10 +69,6 @@ export const router = createBrowserRouter([
         element:<HrRoute><AssetList></AssetList></HrRoute>
       },
       {
-        path: "*",
-        Component: Error404
-      },
-      {
         path: 'request-asset',
         element:<EmployeeRoute><RequestAsset></RequestAsset></EmployeeRoute>
       },
@@ -111,6 +107,10 @@ export const router = createBrowserRouter([
       {
         path:'payment-cancelled',
         Component:PaymentCancel
+      },
+      {
+        path: "*",
+        Component: Error404
       }
     ]
   }
