@@ -128,7 +128,7 @@ const Login = () => {
 
         <div className="hidden md:flex relative">
           <img
-            src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80"
+            src="https://i.ibb.co.com/m5YZdvfJ/loginimage.webp"
             alt="Login Visual"
             className="w-full h-full object-cover"
           />

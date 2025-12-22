@@ -204,7 +204,7 @@ const EmployeeRegistration = () => {
         {/* Image Section */}
         <div className="hidden md:flex relative">
           <img
-            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
+            src="https://i.ibb.co.com/cKmkzBR7/employee.avif"
             alt="Employee Workspace"
             className="w-full h-full object-cover"
           />
