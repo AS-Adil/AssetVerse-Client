@@ -31,7 +31,7 @@ const faqs = [
 
 const FAQSection = () => {
   return (
-    <section className="py-20 bg-base-200">
+    <section className="py-20 bg-base-100">
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Section Header */}
@@ -55,7 +55,7 @@ const FAQSection = () => {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="collapse collapse-arrow bg-base-100 border border-base-200 shadow-sm rounded-lg"
+              className="collapse collapse-arrow bg-base-200 border border-base-200 shadow-sm rounded-lg"
             >
               <input type="radio" name="assetverse-faq" />
               <div className="collapse-title text-lg font-medium text-secondary">

@@ -72,8 +72,8 @@ const handleRegister = async (data) => {
 
 
   return (
-    <div className="min-h-screen bg-base-200 flex items-center justify-center py-14 px-4">
-      <div className="grid md:grid-cols-2 bg-base-100 shadow-xl rounded-2xl overflow-hidden max-w-5xl w-full">
+    <div className="min-h-screen bg-base-100 flex items-center justify-center py-14 px-4">
+      <div className="grid md:grid-cols-2 bg-base-200 shadow-xl rounded-2xl overflow-hidden max-w-5xl w-full">
         {/* Form Section */}
         <div className="p-8 md:p-10 flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-secondary mb-2">

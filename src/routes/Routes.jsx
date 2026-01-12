@@ -23,6 +23,8 @@ import PackagesPage from "../pages/dashboard/packages-page/PackagesPage";
 import Analytics from "../pages/dashboard/analytics/Analytics";
 import PaymentSuccess from "../pages/dashboard/pyment-success/PaymentSuccess";
 import PaymentCancel from "../pages/dashboard/payment-cancel/PaymentCancel";
+import About from "../pages/about-us/About";
+import Privacy from "../pages/privacy/Privacy";
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +34,14 @@ export const router = createBrowserRouter([
       {
         index:true,
         Component: Home
+      },
+      {
+        path:'about-us',
+        element:<About></About>
+      },
+      {
+        path: 'privacy',
+        Component:Privacy
       },
       {
         path:'hr-registration',
@@ -64,6 +74,7 @@ export const router = createBrowserRouter([
         path:'add-asset',
         element:<HrRoute><AddAssets></AddAssets></HrRoute>
       },
+
       {
         path:'asset-list',
         element:<HrRoute><AssetList></AssetList></HrRoute>

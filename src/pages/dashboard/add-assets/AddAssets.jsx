@@ -73,8 +73,8 @@ const AddAssets = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
-      <div className="card bg-base-100 border border-base-200 shadow-lg">
-        <div className="card-body">
+      <div className="card bg-base-100 border border-base-200 shadow-lg mt-5">
+        <div className="card-body bg-base-200 ">
           <h2 className="text-2xl font-bold text-secondary">Add New Asset</h2>
           <p className="text-neutral mb-6">
             Register company assets for tracking and assignment

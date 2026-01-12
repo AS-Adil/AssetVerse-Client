@@ -1,18 +1,22 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router";
+import { ChevronDown } from "lucide-react";
+
 
 const Banner = () => {
   return (
     <section
-      className="relative min-h-[85vh] flex items-center"
+      className="relative min-h-[70vh] flex items-center"
       style={{
-        backgroundImage: "url('https://i.ibb.co.com/3yHcjxBx/banner-image.avif')",
+        backgroundImage:
+          "url('https://i.ibb.co.com/3yHcjxBx/banner-image.avif')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-secondary/50"></div>
+      <div className="absolute inset-0 bg-secondary/60"></div>
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 text-base-100">
@@ -41,12 +45,39 @@ const Banner = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-8 flex flex-wrap gap-4"
         >
-          <button className="btn btn-primary px-8">Get Started</button>
-          <button className="btn btn-outline hover:bg-primary text-base-100 border-base-100">
-            Request a Demo
-          </button>
+          <Link to="/employee-registration" className="btn btn-primary px-8">
+            Get Started
+          </Link>
+
+          <Link
+            to="/about-us"
+            className="btn btn-outline text-white border-white hover:bg-primary"
+          >
+            Learn More
+          </Link>
         </motion.div>
       </div>
+      {/* Scroll Indicator */}
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 0.9 }}
+  className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center text-white/80"
+>
+  {/* <span className="text-sm tracking-wide text-base-100 font-semibold ">Scroll</span> */}
+
+  <motion.div
+    animate={{ y: [0, 10, 0] }}
+    transition={{
+      duration: 1.5,
+      repeat: Infinity,
+      ease: "easeInOut",
+    }}
+  >
+    <ChevronDown className="w-6 h-6 text-base-100" />
+  </motion.div>
+</motion.div>
+
     </section>
   );
 };

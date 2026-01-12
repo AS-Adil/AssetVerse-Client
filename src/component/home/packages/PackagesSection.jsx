@@ -21,7 +21,7 @@ const PackagesSection = () => {
   }
 
   return (
-    <section className="py-20 bg-base-200">
+    <section className="py-20 bg-base-100">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <motion.div
@@ -49,7 +49,7 @@ const PackagesSection = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
               className="
-                card bg-base-100 border border-base-200 p-8
+                card bg-base-200 border border-base-200 p-8
                 transition-all duration-300
                 hover:border-primary
                 hover:shadow-lg

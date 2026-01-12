@@ -63,9 +63,10 @@ const AboutSection = () => {
               key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ y: -6, scale: 1.02 }}
+              transition={{ duration: 0.3, }}
               viewport={{ once: true }}
-              className="card bg-base-200 border border-base-200 shadow-sm p-6"
+              className="card bg-base-200  border border-base-200 shadow-sm p-6"
             >
               <feature.icon
                 className="w-10 h-10 text-primary mb-4"

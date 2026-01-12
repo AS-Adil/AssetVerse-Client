@@ -114,12 +114,14 @@ const AllRequests = () => {
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-6 flex flex-col md:flex-row md:justify-between md:items-center">
-        <h1 className="text-3xl font-bold text-secondary">
+<div>
+          <h1 className="text-3xl font-bold text-secondary">
           All Asset Requests
         </h1>
         <p className="text-neutral mt-1 md:mt-0">
           Review and manage employee asset requests
         </p>
+</div>
       </div>
 
       {/* Table */}

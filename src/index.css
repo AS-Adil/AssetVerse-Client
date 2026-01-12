@@ -4,8 +4,7 @@
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-  /* --color-primary: #FF8A00;
-  --color-secondary: #393E46; */
+
 
 
     --color-primary: #2563EB;        /* Buttons / Links */
@@ -21,6 +20,7 @@
 
   --color-base-100: #FFFFFF;       /* Page BG */
   --color-base-200: #F8FAFC;       /* Card BG */
+  --color-base-300: #111827;       /* Card BG */
 
   --color-info: #0EA5E9;           /* Info */
   --color-success: #22C55E;        /* Success */
@@ -28,6 +28,37 @@
   --color-error: #EF4444;          /* Error */
 
 }
+@plugin "daisyui/theme" {
+  name: "dark";
+  prefersdark: true;
+
+  /* Primary (Actions / CTA) */
+  --color-primary: #3B82F6;        /* Blue-500 */
+  --color-primary-focus: #2563EB;  /* Blue-600 */
+
+  /* Secondary (Headings / Emphasis) */
+  --color-secondary: #E5E7EB;      /* Gray-200 */
+  --color-secondary-focus: #F3F4F6;
+
+  /* Accent (Highlights only) */
+  --color-accent: #38BDF8;         /* Sky-400 */
+  --color-accent-focus: #0EA5E9;
+
+  /* Neutral (Body text) */
+  --color-neutral: #CBD5E1;        /* Slate-300 */
+
+  /* Base surfaces */
+  --color-base-100: #0F172A;       /* Slate-900 (Main BG) */
+  --color-base-200: #020617;       /* Slate-950 (Cards / Navbar) */
+  --color-base-300: #020617;       /* Borders */
+
+  /* States */
+  --color-info: #38BDF8;
+  --color-success: #22C55E;
+  --color-warning: #FACC15;
+  --color-error: #EF4444;
+}
+
 
 body{
    font-family: "Inter", sans-serif;

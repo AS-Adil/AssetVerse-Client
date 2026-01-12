@@ -8,56 +8,77 @@ import toast from "react-hot-toast";
 import LoadingButton from "../../component/loading-button/LoadingButton";
 
 const Login = () => {
-  const {signInuser} = useAuth()
+  const { signInuser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-    const [loadingbtn, setLoadingBtn] = useState(false);
-  
+  const [loadingbtn, setLoadingBtn] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
   const handleLogin = (data) => {
     // console.log("Login data:", data);
 
-    setLoadingBtn(true)
+    setLoadingBtn(true);
     signInuser(data.email, data.password)
-    .then(res =>{
-      // console.log(res);
-      toast.success(`Logged In Successfully`);
+      .then((res) => {
+        // console.log(res);
+        toast.success(`Logged In Successfully`);
 
-      navigate('/')
-    })
-    .catch(err =>{
-      // console.log(err);
-      toast.error(err.message)
-    })
-    .finally(()=>{
-      setLoadingBtn(false)
-    })
-
+        navigate("/");
+      })
+      .catch((err) => {
+        // console.log(err);
+        toast.error(err.message);
+      })
+      .finally(() => {
+        setLoadingBtn(false);
+      });
   };
-
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
       <div className="grid md:grid-cols-2 bg-base-100 shadow-xl rounded-2xl overflow-hidden max-w-5xl w-full">
-
         {/* Form Section */}
         <div className="p-8 md:p-10 flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-secondary mb-2">
             Welcome Back
           </h2>
-          <p className="text-neutral mb-6">
-            Log in to your AssetVerse account
-          </p>
+          <p className="text-neutral mb-6">Log in to your AssetVerse account</p>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setValue("email", "company_a@gmail.com", {
+                  shouldValidate: true,
+                });
+                setValue("password", "company 100", { shouldValidate: true });
+              }}
+              className="btn btn-xs bg-primary text-white hover:bg-primary/90"
+            >
+              Auto fill for HR
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setValue("email", "employee1@gmail.com", {
+                  shouldValidate: true,
+                });
+                setValue("password", "Employee 100", { shouldValidate: true });
+              }}
+              className="btn btn-xs bg-primary text-white hover:bg-primary/90"
+            >
+              Auto fill for Employee
+            </button>
+          </div>
 
           <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
-
             {/* Email */}
             <div>
               <label className="label">Email</label>
@@ -140,7 +161,6 @@ const Login = () => {
             </p>
           </div>
         </div>
-
       </div>
     </div>
   );

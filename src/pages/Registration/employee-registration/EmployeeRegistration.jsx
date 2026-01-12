@@ -63,8 +63,8 @@ const EmployeeRegistration = () => {
   };
 
   return (
-    <div className="min-h-screen bg-base-200 flex items-center justify-center py-14 px-4">
-      <div className="grid md:grid-cols-2 bg-base-100 shadow-xl rounded-2xl overflow-hidden max-w-5xl w-full">
+    <div className="min-h-screen bg-base-100 flex items-center justify-center py-14 px-4">
+      <div className="grid md:grid-cols-2 bg-base-200 shadow-xl rounded-2xl overflow-hidden max-w-5xl w-full">
         {/* Form Section */}
         <div className="p-8 md:p-10 flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-secondary mb-2">
@@ -82,7 +82,7 @@ const EmployeeRegistration = () => {
           </p>
 
           {/* Info Box */}
-          <div className="bg-base-200 border border-base-300 rounded-lg p-4 mb-6">
+          <div className="bg-base-100 border border-base-300 rounded-lg p-4 mb-6">
             <p className="text-sm text-secondary">
               You can log in immediately, but you won’t see any company data
               until an HR Manager connects you to a company.

@@ -200,7 +200,7 @@ const AssetList = () => {
                       <button
                         onClick={() => setEditingAsset(asset)}
                         className="btn btn-xs  flex items-center gap-1
-               transition-all bg-secondary text-white px-4 py-3.5 hover:scale-105 rounded-lg duration-200  "
+               transition-all bg-gray-950 text-white px-4 py-3.5 hover:scale-105 rounded-lg duration-200  "
                         title="Edit asset "
                       >
                         <Pencil

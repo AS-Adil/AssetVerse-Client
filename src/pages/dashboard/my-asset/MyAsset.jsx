@@ -29,11 +29,11 @@ const MyAssets = () => {
 
   return (
     <div className="p-6">
-      <div className="card bg-base-100 shadow-md border border-base-200">
-        <div className="card-body">
-          <h2 className="text-4xl font-bold text-secondary text-center mb-6">
+          <h2 className="text-4xl font-bold text-secondary text-center mt-6 mb-8">
             My Assets
           </h2>
+      <div className="card bg-base-100 shadow-md border border-base-200">
+        <div className="card-body">
 
           <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
             <input

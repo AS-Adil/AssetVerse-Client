@@ -25,7 +25,7 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="py-20 bg-base-100">
+    <section className="py-20 bg-base-200">
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Section Header */}
@@ -54,7 +54,7 @@ const HowItWorks = () => {
               transition={{ duration: 0.5, delay: index * 0.15 }}
               viewport={{ once: true }}
               whileHover={{ y: -6 }}
-              className="bg-base-200 border border-base-200 rounded-xl p-8 shadow-sm"
+              className="bg-base-100 border border-base-200 rounded-xl p-8 shadow-sm"
             >
               {/* Step Number */}
               <div className="text-primary text-sm font-semibold mb-3">

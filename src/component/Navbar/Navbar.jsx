@@ -15,9 +15,15 @@ import {
   User,
   LogOut,
   Package,
-  BarChart3 
+  BarChart3,
+  Home,
+  Info,
+  FileText,
+  LogIn,
+  UserCheck,
 } from "lucide-react";
-
+import ThemeToggle from "../theme-toggle/ThemeToggle";
+import JoinDropdown from "../join-dropdown/JoinDropdown";
 
 const NavItem = ({ to, label, icon: Icon }) => (
   <Link
@@ -43,15 +49,66 @@ const Navbar = () => {
 
   const links = (
     <>
-      <NavLink className="px-3 font-semibold" to={"/"}>
+      <NavLink
+        className="flex items-center gap-2 p-1 px-3 font-semibold hover:text-primary transition-colors"
+        to={"/"}
+      >
+        <Home className="w-5 h-5" />
         Home
       </NavLink>
-      <NavLink className="px-3 font-semibold" to={"/employee-registration"}>
-        Join as Employee
+
+      <NavLink
+        className="flex items-center gap-2 px-3 p-1 font-semibold hover:text-primary transition-colors"
+        to={"/about-us"}
+      >
+        <Info className="w-5 h-5" />
+        About Us
       </NavLink>
-      <NavLink className="px-3 font-semibold" to={"/hr-registration"}>
-        Join as HR Manager
+
+      <NavLink
+        className="flex items-center gap-2 px-3 p-1 font-semibold hover:text-primary transition-colors"
+        to={"/privacy"}
+      >
+        <FileText className="w-5 h-5" />
+        Privacy Policy
       </NavLink>
+
+      {role === "employee" && (
+        <>
+          <NavLink
+            className="flex items-center gap-2 px-3 p-1 font-semibold hover:text-primary transition-colors"
+            to={"/dashboard/my-assets"}
+          >
+            <Briefcase className="w-5 h-5" />
+            My Assets
+          </NavLink>
+          <NavLink
+            className="flex items-center gap-2 px-3 p-1 font-semibold hover:text-primary transition-colors"
+            to={"/dashboard/request-asset"}
+          >
+            <Send className="w-5 h-5" />
+            Request Asset
+          </NavLink>
+        </>
+      )}
+      {role === "hr" && (
+        <>
+          <NavLink
+            className="flex items-center gap-2 px-3 p-1 font-semibold hover:text-primary transition-colors"
+            to={"/dashboard/asset-list"}
+          >
+            <Boxes className="w-5 h-5" />
+            Asset List
+          </NavLink>
+          <NavLink
+            className="flex items-center gap-2 px-3 p-1 font-semibold hover:text-primary transition-colors"
+            to={"/dashboard/all-requests"}
+          >
+            <ClipboardList className="w-5 h-5" />
+            All Requests
+          </NavLink>
+        </>
+      )}
     </>
   );
 
@@ -67,7 +124,10 @@ const Navbar = () => {
 
   return (
     // <div className="navbar bg-base-100 shadow-sm fixed top-0 w-full z-50">
-    <div className="navbar bg-secondary text-white shadow-sm top-0 w-full z-50">
+    <div className="navbar bg-base-300 shadow-md text-white py-2 sticky top-0 w-full z-50">
+      {/* // <div className="navbar bg-secondary text-white dark:bg-base-100 dark:text-base-content
+    // border-b border-base-200 sticky top-0 z-50 "> */}
+
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className=" btn btn-ghost lg:hidden">
@@ -89,9 +149,29 @@ const Navbar = () => {
           </div>
           <ul
             tabIndex="-1"
-            className="menu menu-sm dropdown-content bg-secondary text-white rounded-box z-1 mt-3 w-52 p-2 shadow "
+            className="menu menu-sm dropdown-content bg-base-300 text-white rounded-box z-1 mt-3 w-52 p-2 shadow "
           >
             {links}
+
+            {!user && (
+              <>
+                <NavLink
+                  to="/employee-registration"
+                  className="flex items-center gap-2 px-3 font-semibold hover:text-primary transition-colors"
+                >
+                  <User className="w-5 h-5" />
+                  Join as Employee
+                </NavLink>
+
+                <NavLink
+                  to="/hr-registration"
+                  className="flex items-center gap-2 px-3 font-semibold hover:text-primary transition-colors"
+                >
+                  <UserCheck className="w-5 h-5" />
+                  Join as HR Manager
+                </NavLink>
+              </>
+            )}
           </ul>
         </div>
         <Link
@@ -104,24 +184,37 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1 space-x-3 text-lg">{links}</ul>
+        <ul className="menu menu-horizontal px-1 space-x- text-lg">
+          {links}
+          {!user && (
+            <>
+              <JoinDropdown></JoinDropdown>
+            </>
+          )}
+        </ul>
       </div>
 
       <div className="navbar-end">
-        {user ? (
-          <div className="dropdown dropdown-end ">
-            <div tabIndex={0} role="button" className="m-1">
-              <img
-                className="rounded-full w-9 h-9 cursor-pointer"
-                src={user?.photoURL}
-                alt=""
-              />
-            </div>
-            {/* ----------- drop down start------------------- */}
+        <div className="flex">
+          <div>
+            <ThemeToggle></ThemeToggle>
+          </div>
 
-            <ul
-              tabIndex={-1}
-              className="
+          {user ? (
+            <div className="dropdown dropdown-end ">
+              <div tabIndex={0} role="button" className="m-1">
+                <img
+                  className="rounded-full w-9 h-9 cursor-pointer"
+                  src={user?.photoURL}
+                  alt=""
+                />
+              </div>
+
+              {/* ----------- drop down start------------------- */}
+
+              <ul
+                tabIndex={-1}
+                className="
     dropdown-content
     bg-base-100
     rounded-xl
@@ -130,118 +223,120 @@ const Navbar = () => {
     shadow-lg
     border border-base-200
   "
-            >
-              {/* Profile */}
-              <div className="text-center mb-4">
-                <img
-                  className="mx-auto w-14 h-14 rounded-full ring-2 ring-primary/30"
-                  src={user?.photoURL}
-                  alt=""
-                />
-                <p className="text-sm text-neutral mt-2">{user?.email}</p>
-                <h2 className="font-semibold text-secondary">
-                  {user?.displayName}
-                </h2>
-
-                <span className="inline-block mt-1 text-xs font-semibold text-primary uppercase">
-                  {role === "hr" ? "HR Manager" : "Employee"}
-                </span>
-              </div>
-
-              <div className="divider my-2"></div>
-
-              {/* Role based navigation */}
-              <div className="space-y-1">
-                {role === "hr" && (
-                  <>
-                    <NavItem
-                      to="/dashboard/asset-list"
-                      label="Asset List"
-                      icon={Boxes}
-                    />
-                    <NavItem
-                      to="/dashboard/add-asset"
-                      label="Add Asset"
-                      icon={PlusSquare}
-                    />
-                    <NavItem
-                      to="/dashboard/all-requests"
-                      label="All Requests"
-                      icon={ClipboardList}
-                    />
-                    <NavItem
-                      to="/dashboard/my-employee-list"
-                      label="Employee List"
-                      icon={Users}
-                    />
-                    <NavItem
-                      to="/dashboard/analytics"
-                      label="Analytics"
-                      icon={BarChart3 }
-                    />
-                    <NavItem
-                      to="/dashboard/packages"
-                      label="Upgrade Package"
-                      icon={Package}
-                    />
-                    <NavItem
-                      to="/dashboard/profile"
-                      label="Profile"
-                      icon={UserCog}
-                    />
-                  </>
-                )}
-
-                {role === "employee" && (
-                  <>
-                    <NavItem
-                      to="/dashboard/my-assets"
-                      label="My Assets"
-                      icon={Briefcase}
-                    />
-                    <NavItem
-                      to="/dashboard/my-team"
-                      label="My Team"
-                      icon={Users2}
-                    />
-                    <NavItem
-                      to="/dashboard/request-asset"
-                      label="Request Asset"
-                      icon={Send}
-                    />
-                    <NavItem
-                      to="/dashboard/profile"
-                      label="Profile"
-                      icon={User}
-                    />
-                  </>
-                )}
-              </div>
-
-              <div className="divider my-3"></div>
-
-              {/* Logout */}
-              <button
-                onClick={handleLogout}
-                className="btn btn-primary text-white font-semibold btn-sm w-full flex items-center gap-2 justify-center"
               >
-                <LogOut size={16} />
-                Logout
-              </button>
-            </ul>
+                {/* Profile */}
+                <div className="text-center mb-4">
+                  <img
+                    className="mx-auto w-14 h-14 rounded-full ring-2 ring-primary/30"
+                    src={user?.photoURL}
+                    alt=""
+                  />
+                  <p className="text-sm text-neutral mt-2">{user?.email}</p>
+                  <h2 className="font-semibold text-secondary">
+                    {user?.displayName}
+                  </h2>
 
-            {/* ----------- drop down start------------------- */}
-          </div>
-        ) : (
-          <div>
-            <Link
-              to="/login"
-              className="btn btn-primary px-8 cursor-pointer flex items-center gap-2"
-            >
-              Login
-            </Link>
-          </div>
-        )}
+                  <span className="inline-block mt-1 text-xs font-semibold text-primary uppercase">
+                    {role === "hr" ? "HR Manager" : "Employee"}
+                  </span>
+                </div>
+
+                <div className="divider my-2"></div>
+
+                {/* Role based navigation */}
+                <div className="space-y-1">
+                  {role === "hr" && (
+                    <>
+                      <NavItem
+                        to="/dashboard/asset-list"
+                        label="Asset List"
+                        icon={Boxes}
+                      />
+                      <NavItem
+                        to="/dashboard/add-asset"
+                        label="Add Asset"
+                        icon={PlusSquare}
+                      />
+                      <NavItem
+                        to="/dashboard/all-requests"
+                        label="All Requests"
+                        icon={ClipboardList}
+                      />
+                      <NavItem
+                        to="/dashboard/my-employee-list"
+                        label="Employee List"
+                        icon={Users}
+                      />
+                      <NavItem
+                        to="/dashboard/analytics"
+                        label="Analytics"
+                        icon={BarChart3}
+                      />
+                      <NavItem
+                        to="/dashboard/packages"
+                        label="Upgrade Package"
+                        icon={Package}
+                      />
+                      <NavItem
+                        to="/dashboard/profile"
+                        label="Profile"
+                        icon={UserCog}
+                      />
+                    </>
+                  )}
+
+                  {role === "employee" && (
+                    <>
+                      <NavItem
+                        to="/dashboard/my-assets"
+                        label="My Assets"
+                        icon={Briefcase}
+                      />
+                      <NavItem
+                        to="/dashboard/my-team"
+                        label="My Team"
+                        icon={Users2}
+                      />
+                      <NavItem
+                        to="/dashboard/request-asset"
+                        label="Request Asset"
+                        icon={Send}
+                      />
+                      <NavItem
+                        to="/dashboard/profile"
+                        label="Profile"
+                        icon={User}
+                      />
+                    </>
+                  )}
+                </div>
+
+                <div className="divider my-3"></div>
+
+                {/* Logout */}
+                <button
+                  onClick={handleLogout}
+                  className="btn btn-primary text-white font-semibold btn-sm w-full flex items-center gap-2 justify-center"
+                >
+                  <LogOut size={16} />
+                  Logout
+                </button>
+              </ul>
+
+              {/* ----------- drop down start------------------- */}
+            </div>
+          ) : (
+            <div>
+              <Link
+                to="/login"
+                className="btn btn-primary px-5 cursor-pointer flex items-center gap-2"
+              >
+                <LogIn className="w-4 h-4" />
+                Login
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

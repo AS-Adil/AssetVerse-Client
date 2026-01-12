@@ -64,7 +64,8 @@ const FeaturesShowcase = () => {
             Powerful Features Built for Businesses
           </h2>
           <p className="mt-4 text-neutral text-lg">
-            Everything you need to manage company assets efficiently and securely.
+            Everything you need to manage company assets efficiently and
+            securely.
           </p>
         </motion.div>
 
@@ -75,16 +76,22 @@ const FeaturesShowcase = () => {
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{
+                y: -6,
+                scale: 1.03,
+              }}
               transition={{
-                duration: 0.7,
+                duration: 0.4,
                 ease: "easeOut",
                 delay: index * 0.1,
               }}
               viewport={{ once: true }}
               className="
-                card bg-base-100 border border-base-200 p-6
-                shadow-md hover:shadow-xl transition-all duration-300
-              "
+    group card bg-base-100 dark:bg-base-200
+    border border-base-200 p-6 rounded-md
+    shadow-sm hover:shadow-xl
+    transition-shadow duration-300
+  "
             >
               <feature.icon
                 className="w-10 h-10 text-primary mb-4"
